@@ -31,7 +31,7 @@ Term(env) :
    AppTerm@(env)
   (*| IF Term THEN Term ELSE Term
       { fun ctx -> TmIf($1, $2 ctx, $4 ctx, $6 ctx) }*)
-  | LAMBDA ID DOT Term@(env) => (LambdaCore.TmAbs (ID, Term))
+  | LAMBDA ID DOT ATerm@(env) => (LambdaCore.TmAbs (ID, ATerm))
   ;
 AppTerm(env) :
   (* | SUCC ATerm
