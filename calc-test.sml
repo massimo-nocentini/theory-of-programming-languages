@@ -34,11 +34,9 @@ structure CalcTest =
       | fragToToks (SMLofNJ.ANTIQUOTE i) = [Tok.DummyExp i]
 
     fun % frags = let
-      val (r, s', errs, {vars, nums}) = CP.parseexp ListLex.lex AtomMap.empty (List.concat (map fragToToks frags))
+      val (r, s', errs) = CP.parseTerm ListLex.lex AtomMap.empty (List.concat (map fragToToks frags))
     in
       app (fn (pos, repair) => print (AntlrRepair.actionToString Tok.toString repair ^ "\n")) errs;
-      print (" -- VARS: " ^ (String.concatWith ", " vars) ^ "\n");
-      print (" -- NUMS: " ^ (String.concatWith ", " (map Int.toString nums)) ^ "\n");
       (r, s')
     end
 

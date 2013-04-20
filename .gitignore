@@ -3,3 +3,4 @@
 .cm/
 calc.g.sml
 calc.lex.sml
+*.swp

@@ -7,19 +7,15 @@
 Library
 
   structure CalcTest
+  structure MySampleStructure
 
 is
   $/basis.cm
   $/smlnj-lib.cm
-
-(* NOTE: we use a relative path here, but you should use
- *
- *     $/ml-lpt-lib.cm
- *
- * for your projects.
- *)
   $/ml-lpt-lib.cm
-
+  $/controls-lib.cm
   calc.g : ml-antlr
   calc.lex : ml-ulex
   calc-test.sml
+  lambda-core.sml
+  samples.sml (with:parser.quotations)

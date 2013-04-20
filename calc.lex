@@ -18,16 +18,10 @@
   fun eof() = T.EOF
 );
 
-let     => ( T.KW_let );
-in      => ( T.KW_in );
+lambda  => ( T.LAMBDA );
 {id}    => ( T.ID (yytext) );
-{int}   => ( T.NUM (valOf (Int.fromString (yytext))) );
-"="     => ( T.EQ );
-"+"     => ( T.PLUS );
-"-"     => ( T.MINUS );
-"*"     => ( T.TIMES );
 "("     => ( T.LP );
 ")"     => ( T.RP );
 ";"	=> ( T.SEMI );
-" " | \n | \t
-	=> ( continue() );
+"."	=> ( T.DOT );
+" " | \n | \t => ( continue() );
