@@ -1,5 +1,5 @@
 
 structure MySampleStructure = 
 	struct 
-		val (parsed_termf, _) = CalcTest.% `lambda  x.     x`
+		val parsed_term = CalcTest.% `lambda  x.( x  x)`
 	end

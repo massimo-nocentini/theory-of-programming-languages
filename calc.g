@@ -40,11 +40,11 @@ AppTerm(env) :
       { fun ctx -> TmPred($1, $2 ctx) }
   | ISZERO ATerm
       { fun ctx -> TmIsZero($1, $2 ctx) } *)
-   ATerm@(env) Term@(env) => 
+   ATerm@(env) ATerm@(env) => 
 		(
 			let
-				val e1 = ATerm
-				val e2 = Term
+				val e1 = ATerm1
+				val e2 = ATerm2
 			in
 				LambdaCore.TmApp(e1, e2)
 			end

@@ -8,6 +8,7 @@ Library
 
   structure CalcTest
   structure MySampleStructure
+  structure LambdaCore
 
 is
   $/basis.cm
