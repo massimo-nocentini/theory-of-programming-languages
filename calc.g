@@ -34,8 +34,8 @@ AType(env) :
   | ID => (LambdaCore.TyId ID) 
   ;
 ArrowType(env) :
-    AType@(env) ( ARROW ArrowType@(env) => (LambdaCore.TyArr (AType, ArrowType)))?
-  		 => (AType)
+    AType@(env) ( ARROW ArrowType@(env) => (LambdaCore.TyArr (AType, ArrowType))
+  		| => (AType))
   ;
 Term(env) :
    (* ATerm@(env)*)
