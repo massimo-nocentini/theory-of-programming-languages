@@ -34,14 +34,17 @@ AType(env) :
   | ID => (LambdaCore.TyId ID) 
   ;
 ArrowType(env) :
-    AType@(env) ( ARROW ArrowType@(env) => (LambdaCore.TyArr (AType, ArrowType))
-  		| => (AType))
+    %try AType@(env) ARROW ArrowType@(env) => (LambdaCore.TyArr (AType, ArrowType))
+  | %try AType@(env)	 => (AType)
   ;
 Term(env) :
    (* ATerm@(env)*)
    AppTerm@(env) => (AppTerm)
   (*| IF Term THEN Term ELSE Term
       { fun ctx -> TmIf($1, $2 ctx, $4 ctx, $6 ctx) }*)
+  (* Here we should use the backtracking facility to allow users to not write 
+     the type variable (and choose that name using a function like 
+     pickfreshname, why not that same function?!) *)
   | LAMBDA ID COLON Type@(env) DOT ATerm@(LambdaContext.addname env ID) => (LambdaCore.TmAbs (ID, Type, ATerm))
   ;
 AppTerm(env) :
