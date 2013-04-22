@@ -18,10 +18,14 @@
   fun eof() = T.EOF
 );
 
+bool    => ( T.BOOL );
+nat     => ( T.NAT );
 lambda  => ( T.LAMBDA );
 {id}    => ( T.ID (yytext) );
 "("     => ( T.LP );
 ")"     => ( T.RP );
 ";"	=> ( T.SEMI );
 "."	=> ( T.DOT );
+":"	=> ( T.COLON );
+"->"	=> ( T.ARROW );
 " " | \n | \t => ( continue() );

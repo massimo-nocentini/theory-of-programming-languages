@@ -20,18 +20,29 @@
   | LP       ("(")   | RP      	(")")
   | SEMI     (";")   | LAMBDA	("lambda")
   | DOT	     (".")   | DummyExp of LambdaCore.term
+  | COLON    (":")   | ARROW    ("->")
+  | BOOL 	     | NAT
+;
+
+Type(env) :
+    ArrowType@(env) => (ArrowType)
   ;
-
-
-prog
-  : (Term@(AtomMap.empty) ";")*
+AType(env) :
+    LP Type@(env) RP => (Type) 
+  | BOOL => (LambdaCore.TyBool)
+  | NAT	 => (LambdaCore.TyNat)
+  | ID => (LambdaCore.TyId ID) 
+  ;
+ArrowType(env) :
+    AType@(env) ( ARROW ArrowType@(env) => (LambdaCore.TyArr (AType, ArrowType)))?
+  		 => (AType)
   ;
 Term(env) :
    (* ATerm@(env)*)
-   AppTerm@(env)
+   AppTerm@(env) => (AppTerm)
   (*| IF Term THEN Term ELSE Term
       { fun ctx -> TmIf($1, $2 ctx, $4 ctx, $6 ctx) }*)
-  | LAMBDA ID DOT ATerm@(env) => (LambdaCore.TmAbs (ID, ATerm))
+  | LAMBDA ID COLON Type@(env) DOT ATerm@(LambdaContext.addname env ID) => (LambdaCore.TmAbs (ID, Type, ATerm))
   ;
 AppTerm(env) :
   (* | SUCC ATerm
@@ -51,7 +62,7 @@ AppTerm(env) :
 		)
   ;
 ATerm(env) :
-    "(" Term@(env) ")"
+    "(" Term@(env) ")" => (Term)
 (*  | TRUE
       { fun ctx -> TmTrue($1) }
   | FALSE
@@ -65,6 +76,6 @@ ATerm(env) :
           TmVar($1.i, name2index $1.i ctx $1.v, ctxlength ctx) }
   | NUM
       => ( nums := NUM::(!nums); NUM ) *)
-  | ID => ( LambdaCore.TmVar ID)
+  | ID => ( LambdaCore.TmVar (LambdaContext.name2index env ID, LambdaContext.ctxlength env))
   | DummyExp
   ;
