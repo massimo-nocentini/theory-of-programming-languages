@@ -43,6 +43,17 @@ structure CalcTest =
       (r, s')
     end
 
+	(* The following function is the ``entry point'' to invoke the parsing
+	   on a given string (which may be passed after reading from console
+	   or opening a file. It should be extended to consume a list of
+	   strings as argument instead of a single one as in this version. *)
+	fun parse str = 
+		let
+			val parsed_pair_info = % [SMLofNJ.QUOTE str]
+		in
+			#1 parsed_pair_info
+		end
+
 (*    val _ = Control.quotation := true *)
 
   end
