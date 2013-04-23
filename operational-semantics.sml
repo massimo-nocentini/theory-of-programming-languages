@@ -12,11 +12,12 @@ structure OperationalSemantics =
         fun tnmap onvar c t = 
             let
                 fun     walk c (TmVar (x, n)) = onvar c x n
-                    |   walk c (TmAbs (x, tyT1, t2)) = 
-                            TmAbs (x, tyT1, walk (c+1) t2) 
+                    |   walk c (TmAbs (x, tyT1, t1)) = 
+                            TmAbs (x, tyT1, walk (c+1) t1) 
                     |   walk c (TmApp (t1, t2)) = TmApp (walk c t1, walk c t2)
             in walk c t end
 
+        (* the following function implements the definition 6.2.1 on pag. 79 *)
         fun termShiftAbove d c t = 
             tnmap   (fn c => fn x => fn n =>
                         if x >= c 
@@ -27,9 +28,9 @@ structure OperationalSemantics =
         fun termShift d t = termShiftAbove d 0 t
 
         fun termSubst j s t = 
-            tnmap   (fn j => fn x => fn n =>
-                        if x = j 
-                        then termShift j s
+            tnmap   (fn c => fn x => fn n =>
+                        if x = c (* the book use the condition x = c + j *)
+                        then termShift c s
                         else TmVar (x, n))
                     j t
 
