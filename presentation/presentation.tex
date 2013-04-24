@@ -315,8 +315,10 @@ where:
             \begin{split}
                 [x \mapsto s]x &= s \\
                 [x \mapsto s]y &= y \quad \text{if } x \not = y\\
-                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. t_{1} \quad \text{if } x = y\\
-                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. [x \mapsto s]t_{1} \quad \text{if } x \not = y\\
+                [x \mapsto s](\lambda y.t_{1}) &= {\color{red} \lambda y. t_{1} 
+                    \quad \text{if } x = y}\\
+                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. [x \mapsto s]t_{1} 
+                    \quad {\color{red} \text{if } x \not = y}\\
                 [x \mapsto s](t_{1} \, t_{2}) &= 
                     ([x \mapsto s]t_{1})\, ([x \mapsto s]t_{2})\\
             \end{split}
@@ -354,7 +356,8 @@ where:
                 [x \mapsto s]y &= y \quad \text{if } x \not = y\\
                 [x \mapsto s](\lambda y.t_{1}) &= \lambda y. t_{1} \quad \text{if } x = y\\
                 [x \mapsto s](\lambda y.t_{1}) &= \lambda y. [x \mapsto s]t_{1} 
-                                    \quad \text{if } x \not = y \wedge y \not \in FV(s)\\
+                                    \quad \text{if } x \not = y 
+                                    {\color{red}\wedge y \not \in FV(s)}\\
                 [x \mapsto s](t_{1} \, t_{2}) &= 
                     ([x \mapsto s]t_{1})\, ([x \mapsto s]t_{2})\\
             \end{split}
@@ -422,7 +425,8 @@ where:
                 [x \mapsto s]y &= y \quad \text{if } x \not = y\\
                 [x \mapsto s](\lambda y.t_{1}) &= \lambda y. [x \mapsto s]t_{1} 
                                     \quad \text{if } x \not = y 
-                                    \wedge (y \not \in FV(s) \text{ by renaming})\\
+                                    \wedge (y \not \in FV(s) 
+                                    {\color{red} \text{ by renaming}})\\
                 [x \mapsto s](t_{1} \, t_{2}) &= 
                     ([x \mapsto s]t_{1})\, ([x \mapsto s]t_{2})\\
             \end{split}
