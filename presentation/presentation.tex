@@ -177,30 +177,38 @@
 
 \begin{frame}{Evaluation rules review}
     \begin{block}{Evaluation rules}
-        \begin{displaymath}
-            \begin{split}
-              {{t_{1} \rightarrow t_{1}^{\prime}}\over
-                    {t_{1} \, t_{2} \rightarrow t_{1}^{\prime} \, t_{2}}} & \quad \text{E-App}_{1} \\
-               {{t_{2} \rightarrow t_{2}^{\prime}}\over
-                    {v_{1} \, t_{2} \rightarrow v_{1} \, t_{2}^{\prime}}} & \quad \text{E-App}_{2} \\
-               (\lambda x:T_{11}.t_{12})v_{2} & \rightarrow [x \mapsto v_{2}]t_{12}  \quad \text{E-AppAbs} \\
-            \end{split}
-        \end{displaymath}
+
+        \begin{center}
+            \begin{tabular}{ c r }
+                    $\displaystyle {{t_{1} \rightarrow t_{1}^{\prime}}\over
+                    {t_{1} \, t_{2} \rightarrow t_{1}^{\prime} \, t_{2}}}
+                $ & (\emph{E-APP1}) \\ 
+               & \\
+               $\displaystyle{{t_{2} \rightarrow t_{2}^{\prime}}\over
+                    {v_{1} \, t_{2} \rightarrow v_{1} \, t_{2}^{\prime}}}$ & (\emph{E-APP2}) \\
+               & \\ 
+               $\displaystyle(\lambda x:T_{11}.t_{12})v_{2} \rightarrow 
+                [x \mapsto v_{2}]t_{12}$ & (\emph{E-APPABS}) \\
+            \end{tabular}
+        \end{center}
     \end{block}
 \end{frame}
 
 \begin{frame}{Typing rules review}
     \begin{block}{Typing rules}
-        \begin{displaymath}
-            \begin{split}
-              {{x:T \in \Gamma}\over
-                    {\Gamma \vdash x:T}} & \quad \text{T-Var} \\
-              {{\Gamma, x:T_{1} \vdash t_{2}:T_{2}}\over
-                    {\Gamma \vdash \lambda x:T_{1}.t_{2} : T_{1} \rightarrow T_{2}}} & \quad \text{T-Abs} \\
-              {{\Gamma \vdash t_{1}:T_{11} \rightarrow T_{12} \quad \Gamma \vdash t_{2}:T_{11}}\over
-                    {\Gamma \vdash t_{1} \, t_{2} : T_{12}}} & \quad \text{T-App} \\
-            \end{split}
-        \end{displaymath}
+        \begin{center}
+            \begin{tabular}{ c r }
+                    $\displaystyle {{x:T \in \Gamma}\over
+                    {\Gamma \vdash x:T}} $ & (\emph{T-VAR}) \\ 
+               & \\
+               $\displaystyle{{\Gamma, x:T_{1} \vdash t_{2}:T_{2}}\over
+                    {\Gamma \vdash \lambda x:T_{1}.t_{2} : T_{1} 
+                        \rightarrow T_{2}}} $ & (\emph{T-ABS}) \\
+               & \\ 
+               $\displaystyle{{\Gamma \vdash t_{1}:T_{11} \rightarrow T_{12} \quad \Gamma \vdash t_{2}:T_{11}}\over
+                    {\Gamma \vdash t_{1} \, t_{2} : T_{12}}} $ & (\emph{T-APP}) \\
+            \end{tabular}
+        \end{center}
     \end{block}
 \end{frame}
 
