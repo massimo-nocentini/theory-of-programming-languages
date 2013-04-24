@@ -39,7 +39,7 @@
 
 \usepackage[latin1]{inputenc}
 % or whatever
-
+\usepackage{wasysym}
 \usepackage{times}
 \usepackage[T1]{fontenc}
 % Or whatever. Note that the encoding and the font should match. If T1
@@ -203,9 +203,9 @@ where:
 \begin{frame}{Substitution definition - first attempt}
 
     Consider the abstraction application rule:
-    \begin{displaymath}
-        (\lambda x:T_{11}.t_{12})v_{2} \rightarrow [x \mapsto v_{2}]t_{12}
-    \end{displaymath}
+        $(\lambda x:T_{11}.t_{12})v_{2} \rightarrow [x \mapsto v_{2}]t_{12}$
+
+    \pause
 
     \begin{block}{Definition of $[x \mapsto s]t$}
         The substitution of a term $s$ for a variable named $x$ in a term $t$,
@@ -221,25 +221,15 @@ where:
         \end{displaymath}        
     \end{block}
 
-\end{frame}
+    \pause
 
-\begin{frame}{Substitution definition - first attempt}
-
-    Consider the abstraction application rule:
-    \begin{displaymath}
-        (\lambda x:T_{11}.t_{12})v_{2} \rightarrow [x \mapsto v_{2}]t_{12}
-    \end{displaymath}
-
-    \begin{example}
+    \begin{alertblock}{The names of bound variables do not matter}
         \begin{displaymath}
-                [x \mapsto (\lambda z. z\, w)](\lambda y.x) =
-                     \lambda y.\lambda z.z\, w 
-        \end{displaymath}
-    \end{example}
-
-    \begin{alertblock}{fd}
-        \begin{displaymath}
-                [x \mapsto y](\lambda x.x) = \lambda x.y 
+            \begin{split}
+                [x \mapsto (\lambda z. z\, w)](\lambda y.x) &=
+                     \lambda y.\lambda z.z\, w \quad \smiley \\
+                [x \mapsto y](\lambda x.x) &= \lambda x.y \quad \frownie
+            \end{split}
         \end{displaymath}
     \end{alertblock}
 \end{frame}
