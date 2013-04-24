@@ -141,6 +141,40 @@
 % - If you omit details that are vital to the proof/implementation,
 %   just say so once. Everybody will be happy with that.
 
+\begin{frame}{Syntax}
+    \begin{block}{Terms}
+        \begin{center}
+            \begin{tabular}{ r l r }
+              $t ::= $ & $x$ & \emph{variable} \\
+               & $\lambda x:T.t$ & \emph{abstraction} \\
+               & $t \, t$ & \emph{application} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+    \begin{block}{Values}
+        \begin{center}
+            \begin{tabular}{ r l r }
+              $v ::= $ & $\lambda x:T.t$ & \emph{abstraction value} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+    \begin{block}{Types}
+        \begin{center}
+            \begin{tabular}{ r l r }
+              $T ::= $ & $T \rightarrow T$ & \emph{function type} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+    \begin{block}{Contexts}
+        \begin{center}
+            \begin{tabular}{ r l r }
+              $\Gamma ::= $ & $\emptyset$ & \emph{empty context} \\
+               & $\Gamma, x:T$ & \emph{variable binding} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+\end{frame}
+
 \section{Constrait-based typing}
 
 \section{Unification}
@@ -213,7 +247,7 @@ where:
         \begin{displaymath}
             \begin{split}
                 [x \mapsto s]x &= s \\
-                [x \mapsto s]y &= y \\
+                [x \mapsto s]y &= y \quad \text{if } x \not = y\\
                 [x \mapsto s](\lambda y.t_{1}) &= \lambda y. [x \mapsto s]t_{1} \\
                 [x \mapsto s](t_{1} \, t_{2}) &= 
                     ([x \mapsto s]t_{1})\, ([x \mapsto s]t_{2})\\
@@ -232,6 +266,139 @@ where:
             \end{split}
         \end{displaymath}
     \end{alertblock}
+    \pause
+    We've not distinguished between \emph{free} occurrences of $x$ in a term $t$,
+    which should get replaced during substitution, and \emph{bound} ones, which
+    shouldn't.
+\end{frame}
+
+\begin{frame}{Substitution definition - second attempt}
+
+    Consider the abstraction application rule:
+        $(\lambda x:T_{11}.t_{12})v_{2} \rightarrow [x \mapsto v_{2}]t_{12}$
+
+    \pause
+
+    \begin{block}{Definition of $[x \mapsto s]t$}
+        The substitution of a term $s$ for a variable named $x$ in a term $t$,
+        written as $[x \mapsto s]t$, is defined as follows:
+        \begin{displaymath}
+            \begin{split}
+                [x \mapsto s]x &= s \\
+                [x \mapsto s]y &= y \quad \text{if } x \not = y\\
+                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. t_{1} \quad \text{if } x = y\\
+                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. [x \mapsto s]t_{1} \quad \text{if } x \not = y\\
+                [x \mapsto s](t_{1} \, t_{2}) &= 
+                    ([x \mapsto s]t_{1})\, ([x \mapsto s]t_{2})\\
+            \end{split}
+        \end{displaymath}        
+    \end{block}
+
+    \pause
+
+    \begin{alertblock}{Variable capture}
+        \begin{displaymath}
+            \begin{split}
+                [x \mapsto y](\lambda x.x) &= \lambda x.x \quad \smiley \\
+                [x \mapsto z](\lambda z.x) &= \lambda x.z \quad \frownie\\ 
+            \end{split}
+        \end{displaymath}
+    \end{alertblock}
+    \pause
+    To avoid it, we need to make sure that the bound variable names of $t$
+    are kept distinct from the free variables of $s$.
+\end{frame}
+
+\begin{frame}{Substitution definition - third attempt}
+
+    Consider the abstraction application rule:
+        $(\lambda x:T_{11}.t_{12})v_{2} \rightarrow [x \mapsto v_{2}]t_{12}$
+
+    \pause
+
+    \begin{block}{Definition of $[x \mapsto s]t$}
+        The substitution of a term $s$ for a variable named $x$ in a term $t$,
+        written as $[x \mapsto s]t$, is defined as follows:
+        \begin{displaymath}
+            \begin{split}
+                [x \mapsto s]x &= s \\
+                [x \mapsto s]y &= y \quad \text{if } x \not = y\\
+                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. t_{1} \quad \text{if } x = y\\
+                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. [x \mapsto s]t_{1} 
+                                    \quad \text{if } x \not = y \wedge y \not \in FV(s)\\
+                [x \mapsto s](t_{1} \, t_{2}) &= 
+                    ([x \mapsto s]t_{1})\, ([x \mapsto s]t_{2})\\
+            \end{split}
+        \end{displaymath}        
+    \end{block}
+
+    \pause
+
+    \begin{alertblock}{$[x \mapsto s]t$ isn't a total function}
+        \begin{displaymath}
+            \begin{split}
+                [x \mapsto z](\lambda z.x) &\not = \lambda x.z \quad \smiley\\ 
+                [x \mapsto z](\lambda z.x) &\quad \text{yields no term at all!}\\
+            \end{split}
+        \end{displaymath}
+    \end{alertblock}
+    \pause
+    A common fix is to work with terms \emph{up to renaming of bound variables}.
+\end{frame}
+
+\begin{frame}{Substitution definition - final attempt}
+
+    Consider the abstraction application rule:
+        $(\lambda x:T_{11}.t_{12})v_{2} \rightarrow [x \mapsto v_{2}]t_{12}$
+
+    \begin{block}{Observation}
+        Terms that differ only in the names of bound variables are 
+        interchangeable in all contexts.
+    \end{block}
+
+    \pause
+
+    Any $\lambda$-bound variable can be changed to another name (changing the body 
+    consistently too) at any point where this is convenient.
+
+    \begin{example}
+        \begin{displaymath}
+            \begin{split}
+                [x \mapsto y \, z](\lambda y.x \, y) &
+                    \text{ renames abstraction to } (\lambda w.x \, w)\\ 
+                [x \mapsto y \, z](\lambda w.x \, w) &= \lambda w. y \, z \, w \quad \smiley\\
+            \end{split}
+        \end{displaymath}
+    \end{example}
+
+    \pause
+
+    This observation makes $[x \mapsto s]t$ a total function: 
+    whenever we have to apply it to arguments for which it is 
+    undefined, we can rename the $\lambda$ abstraction bound variable
+    in order to satisfy side conditions.
+\end{frame}
+
+\begin{frame}{Substitution definition - final attempt}
+
+    Consider the abstraction application rule:
+        $(\lambda x:T_{11}.t_{12})v_{2} \rightarrow [x \mapsto v_{2}]t_{12}$
+
+    \begin{block}{Definition of $[x \mapsto s]t$}
+        The substitution of a term $s$ for a variable named $x$ in a term $t$,
+        written as $[x \mapsto s]t$, is defined as follows:
+        \begin{displaymath}
+            \begin{split}
+                [x \mapsto s]x &= s \\
+                [x \mapsto s]y &= y \quad \text{if } x \not = y\\
+                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. [x \mapsto s]t_{1} 
+                                    \quad \text{if } x \not = y 
+                                    \wedge (y \not \in FV(s) \text{ by renaming})\\
+                [x \mapsto s](t_{1} \, t_{2}) &= 
+                    ([x \mapsto s]t_{1})\, ([x \mapsto s]t_{2})\\
+            \end{split}
+        \end{displaymath}        
+    \end{block}
 \end{frame}
 
 \subsection{Nameless representation of terms}
