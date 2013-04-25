@@ -444,19 +444,149 @@ where:
 
 \subsection{Nameless representation of terms}
 
-\begin{frame}{Dalla rete al grafo}
-  Data una reazione \emph{non reversibile} $r$ tale che $reagenti(r) =
-  \{ r_{1}, \ldots, r_{n} \} \wedge prodotti(r) = \{ p_{1}, \ldots,
-  p_{m} \}$, costruiamo il sotto grafo $reagenti(r) \times
-  prodotti(r)$
-    \begin{block}{Esempio}
-      Se $reagenti(r) = \{ a, b, c, d \} \wedge prodotti(r) = \{a, e,
-      f\}$ allora
-%      \begin{figure}
-%        \centering
-%        \includegraphics[scale=.6]{images/non-reversible-reaction-example.dot.eps}
-%        \label{fig:non-reversible-reaction-mapping}
-%      \end{figure}
+\begin{frame}{De Bruijn's idea}
+    Up to now we've worked with terms \emph{up to renaming of bound 
+    variables}. This does mean that an abstraction term is a \emph{schema}
+    term indeed, which could represent \emph{infinite} terms.
+    \begin{displaymath}
+        \lambda x:T.t \text{ is a term} \leftrightarrow 
+            \forall x \not \in FV(t)
+    \end{displaymath}
+    \begin{itemize}
+        \item it is good for theoretical reasoning \smiley
+        \item do not supply a single representation of terms \frownie
+    \end{itemize}
+    \pause
+    \begin{block}{De Bruijn's idea}
+        Variable occurrences \emph{point} to their binders, rather 
+        than referring to them by name.
+    \end{block}
+    Using this idea we abstract from \emph{variable names}, replacing names by
+    natural numbers. Let $k \in \mathbb{N}$ then $k$ represents \emph{the variable 
+    bound by the $k$-th enclosing $\lambda$, counting from the most nested abstraction}.
+    \pause
+    \begin{example}
+        \begin{displaymath}
+            \begin{split}
+                \lambda x.x \quad & \text{transforms to} \quad \lambda.0\\
+                \lambda s.\lambda z.s \, (s\,  z) \quad & 
+                    \text{transforms to} \quad \lambda.\lambda.1\,  (1\,  0)
+            \end{split}
+        \end{displaymath}
+    \end{example}
+\end{frame}
+
+\begin{frame}{New definition of terms}
+    The new definition of \emph{nameless} terms is similar to the one given 
+    before, the only difference is that we need to track of how many free
+    variables can appear in each term.
+
+    \begin{block}{Definition}
+        The set of terms is defined as the smallest family of sets
+        $\{\mathcal{T}_{0},\mathcal{T}_{1},\ldots\}$ such that:
+        \begin{displaymath}  
+           \begin{split} 
+                k \in \{0, \ldots, n-1\} &\rightarrow k \in \mathcal{T}_n  \\
+                t_{1} \in \mathcal{T}_{n+1} &\rightarrow \lambda.t \in \mathcal{T}_n  \\
+                t_{1} \in \mathcal{T}_{n} \wedge t_{2} \in \mathcal{T}_{n}
+                    &\rightarrow t_{1} \, t_{2} \in \mathcal{T}_n  \\
+           \end{split} 
+        \end{displaymath}  
+    \end{block}
+    For all $j \in \mathcal{T}_n$ we say that $j$ is a $n$-term and in $j$ 
+    appear \emph{at most} $n$ different free variables (pay attention: this is
+    not a constraint on the number of \emph{occurrences} of the free variables, that is
+    $\lambda.\lambda.(3\, (3\, (1\, (2\, (0\, 3)))))\, ((3\, 1)\, 3) 
+        \in \mathcal{T}_{4}$ where there are 6 free variables).
+\end{frame}
+
+\begin{frame}
+    
+    \begin{itemize}
+        \item two ordinary terms $t_1, t_2$ are equivalent modulo renaming of bound 
+            $\leftrightarrow$ $t_{1}, t_{2}$ have the same nameless 
+            representation \smiley
+        \item how to deal with terms containing free variables, 
+            ie $\lambda x.y\, x$?\\
+            {\footnotesize We know how far the binder of $x$ is , but we doesn't 
+            for the binder of $y$...}
+    \end{itemize}
+    \pause
+    \begin{block}{Naming context}
+        A naming context is an assignment of natural numbers to variables names,
+        more formally:
+       \begin{displaymath} 
+            \Gamma \subseteq \mathcal{V} \times \mathbb{N} 
+       \end{displaymath} 
+       where $\mathcal{V}$ is the set of variables.
+    \end{block}
+    \pause
+    \begin{example}
+        Let $\Gamma = \{ x \mapsto 4, y \mapsto 3, z \mapsto 2, a \mapsto 1, 
+                        b \mapsto 0 \}$ be a naming context. We have:
+        \begin{displaymath}
+            \begin{split}
+                x \, (y \, z) \quad &\text{transforms to} \quad 4 \, (3 \, 2)\\
+                \lambda w.y \, w \quad &\text{transforms to} \quad 
+                    \lambda. 4 \, 0 \quad (4?!)\\
+                \lambda w.\lambda a.x \quad &\text{transforms to} \quad 
+                    \lambda.\lambda. 6\quad (6?!)\\
+            \end{split}
+        \end{displaymath}
+    \end{example}
+\end{frame}
+
+\begin{frame}{Shifting and substitution}
+    Consider \emph{again} the rule:
+        $(\lambda x.t_{12})v_{2} \rightarrow [x \mapsto v_{2}]t_{12}$ 
+        where $t_{12} = \lambda y.t, x\not=y$.
+    \\~\\
+    \pause
+    
+    When we can apply the substitution $[x \mapsto s]$ to an abstraction $\lambda.t$
+    the context in which the substitution is happening introduces a $\lambda$, 
+    in other word introduces a variable. \\
+    \begin{block}{Shifting}
+        In order to remain consistent within $s$, we have to increment the indices of 
+        free variables appearing in $s$ by one, since we're introducing a 
+        $\lambda$ binder between the free variables in $s$ and their binders.
+        We call this increment operation, or \emph{shifting}, with $\uparrow^{1}(s)$.
+    \end{block}
+    \pause
+    For the same reason that the abstraction $\lambda.t$ introduces a variable,
+    we've to modify the definition of $[x \mapsto s]$, paying attention to increment
+    x by one too because x isn't the variable bound by the context $\lambda.t$.
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Formal Substitution definition}
+        The substitution of a term $s$ for a variable number $j$ in a term $t$,
+        written as $[j \mapsto s]t$, is defined inductively as follows:
+        \begin{displaymath}
+            \begin{split}
+                [j \mapsto s]k &= s \quad \text{if } k = j\\
+                [j \mapsto s]k &= k \quad \text{if } k \not= j\\
+                [j \mapsto s]\lambda.t_{1} &= 
+                    \lambda.[j+1 \mapsto \uparrow^{1}(s)]t_{1} \\
+                [j \mapsto s]t_1 \, t_2 &= ([j \mapsto s] t_1)\, ([j \mapsto s] t_2)
+            \end{split}
+        \end{displaymath}
+    \end{block}
+    \pause 
+    \begin{block}{Formal Shifting definition}
+        The $d$-place shift of a term $t$ above cutoff $c$,
+        written as $\uparrow_{c}^{d}(t)$, is defined inductively as follows
+        (where $\uparrow^{d}(t)$ stands for $\uparrow_{0}^{d}$):
+        \begin{displaymath}
+            \begin{split}
+                \uparrow_{c}^{d}(k) &= k \quad \text{if } k < c\\
+                \uparrow_{c}^{d}(k) &= k+d \quad \text{if } k \geq c\\
+                \uparrow_{c}^{d}(\lambda.t_{1}) &= 
+                    \lambda.\uparrow_{c+1}^{d}(t_{1}) \\
+                \uparrow_{c}^{d}(t_1 \, t_2) &= \uparrow_{c}^{d}(t_1)\, 
+                    \uparrow_{c}^{d}(t_2)
+            \end{split}
+        \end{displaymath}
     \end{block}
 \end{frame}
 
