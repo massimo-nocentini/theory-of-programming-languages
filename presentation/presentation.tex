@@ -339,7 +339,7 @@ where:
         \begin{displaymath}
             \begin{split}
                 [x \mapsto y](\lambda x.x) &= \lambda x.x \quad \smiley \\
-                [x \mapsto z](\lambda z.x) &= \lambda x.z \quad \frownie\\ 
+                [x \mapsto z](\lambda z.x) &= \lambda z.z \quad \frownie\\ 
             \end{split}
         \end{displaymath}
     \end{alertblock}
@@ -377,7 +377,7 @@ where:
     \begin{alertblock}{$[x \mapsto s]t$ isn't a total function}
         \begin{displaymath}
             \begin{split}
-                [x \mapsto z](\lambda z.x) &\not = \lambda x.z \quad \smiley\\ 
+                [x \mapsto z](\lambda z.x) &\not = \lambda z.z \quad \smiley\\ 
                 [x \mapsto z](\lambda z.x) &\quad \text{yields no term at all!} \quad \frownie\\
             \end{split}
         \end{displaymath}
