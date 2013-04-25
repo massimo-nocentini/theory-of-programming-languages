@@ -590,141 +590,37 @@ where:
     \end{block}
 \end{frame}
 
-\subsection{Standard ML implementation}
-% put here some comments on the implementation, the tool used and some
-% final considerations.
-\begin{frame}{Seed Compounds}
-  \begin{itemize}
-  \item cercare le componenti fortemente connesse
-  \item selezionare vertici in componenti sorgenti come \emph{seed
-      compounds}
-  \end{itemize}
-%  \begin{figure}
-%    \includegraphics[scale=.35]{images/biology-scc-decomposition.eps}
-%  \end{figure}
-
+\begin{frame}{Evaluation}
+    Consider \emph{for the last time} the rule:
+        $(\lambda x.t_{12})v_{2} \rightarrow [x \mapsto v_{2}]t_{12}$ 
+        where $t_{12} = \lambda y.t, x\not=y$.
+    \\~\\
+    \pause
+    Reducing an abstraction $\lambda x.t_{12}$ make disappear the bound 
+    variable $x$, so the resulting term $[x \mapsto v_{2}]t_{12}$ belong to 
+    a smaller context (respect the number of $\lambda$ binders), hence we have to
+    shift its free variables \emph{backward} by one.
+    \\~\\
+    \pause
+    Similarly, in the resulting term we've to shift free 
+    variables in $v_{2}$ \emph{forward} by one
+    because the term $t_{12}$ is defined in a larger context (is protected by
+    a $\lambda$-abstraction).
+    \\~\\
+    \pause
+    Finally, we're interested to start substituting the inner most bound
+    variable since this is our reduction strategy, so the initial index
+    given to substitution function is $0$.
+    \\~\\
+    \pause
+    \begin{block}{Modified reduction rule}
+        \begin{displaymath}
+            (\lambda.t_{12})\, v_{2} \rightarrow \uparrow^{-1}(
+            [0 \mapsto \uparrow^{1}(v_{2})]t_{12})
+        \end{displaymath}
+    \end{block}
 \end{frame}
 
-\begin{frame}{Storie}
-  \begin{block}{Definizione}
-    Dato un grafo orientato $G = (\mathbb{B} \cup \mathbb{W}, E)$, una
-    \emph{storia} \`e un sotto grafo aciclico $G' = (\mathbb{B} \cup
-    \mathbb{W'}, E')$ di $G$ tale che $E' \subseteq E $ e
-  \begin{displaymath}
-    \mathbb{W'} = \{w \in \mathbb{W}: indeg(w) > 0 \wedge outdeg(w)
-    > 0\}
-  \end{displaymath}
-\end{block}
-$\mathbb{B}$: vertici a cui \`e permesso essere sorgenti o pozzi
-%\begin{center}
-%  \includegraphics[scale=0.4]{images/graph-with-b-setted.eps}
-%  \includegraphics[scale=0.4]{images/story-example.eps} 
-%  \includegraphics[scale=0.4]{images/non-story-example.eps}
-%\end{center} 
-\end{frame}
-
-\section{Nostro contributo}
-
-\subsection{Obiettivi}
-
-\begin{frame}{Analizzare reti, costruire $\mathbb{B}$ e verificare il
-    metodo}
-Gli obiettivi del nostro lavoro sono:
-\begin{itemize}
-\item<1-> rappresentare una rete mediante un grafo\\
-  \footnotesize{astraendo dai molti dettagli di \emph{SBML}}
-\item<2-> fornire strumenti per analizzare insiemi di reti\\
-  \footnotesize{per avere informazioni sui metaboliti che appaiono in
-    pi\`u di una rete}
-\item<3-> costruire in modo automatico l'insieme $\mathbb{B}$\\
-  \footnotesize{sfruttando le informazioni di tutte le reti studiate}
-\item<4-> verificare se il metodo \`e accettabile\\
-  \footnotesize{per misurare la validit\`a di $\mathbb{B}$}
-\end{itemize}
-\end{frame}
-
-\subsection{Metodologia}
-
-\begin{frame}{Rappresentazione della rete con grafo}
-%\begin{center} 
-%  \includegraphics[scale=.3]{images/sbml-code-chunk.eps}
-%  \includegraphics[scale=.4]{images/presentation-input-graph-all-whites.eps}
-%\end{center}
-\end{frame}
-
-\subsection{Risultati}
-
-\begin{frame}{Analisi delle reti}
-%  \begin{center}
-%    \includegraphics[scale=.5]{images/ResultViewer-table-with-average-row-selected-particular.eps}
-%  \end{center}
-Tutte le reti hanno una struttura a ``clessidra'':
-\begin{itemize}
-\item molte componenti \emph{sorgenti} contenenti pochi vertici
-\item poche componenti \emph{intermedie} contenenti molti vertici
-\item molte componenti \emph{pozzo} contenenti pochi vertici
-\end{itemize}
-\pause
-\begin{alertblock}{Troppi vertici sorgenti e pozzi}
-  L'obiettivo sarebbe stato averne pochi
-\end{alertblock}
-\end{frame}
-
-\begin{frame}{Analisi dei vertici}
-%  \begin{center}
-%    \includegraphics[scale=.5]{images/ResultViewer-grouping-table-zoom}
-%  \end{center}
-  Studiando un insieme di reti, pi\`u del 10\% dei vertici non hanno
-  un ruolo univoco
-  \pause
-  \begin{alertblock}{Incertezza sulla costruzione di $\mathbb{B}$}
-    Vertici con pi\`u di un ruolo inducono incertezza sul decidere la
-    loro appartenenza all'insieme $\mathbb{B}$
-  \end{alertblock}
-\end{frame}
-
-\begin{frame}{Combinazione delle due analisi}
-%  \begin{center}
-%      \includegraphics[scale=.5]{images/many-models-with-b-refinement}
-%  \end{center}
-  Se consideriamo tutti i vertici che hanno un ruolo univoco rispetto
-  ad un insieme di reti, \`e possibile raffinare ogni $\mathbb{B}$
-  escludendo i vertici che non hanno un ruolo conforme
-\end{frame}
-
-
-\section*{Sommario}
-
-\begin{frame}{Riepilogo}
-  % Keep the summary *very short*.
-    \begin{itemize}
-    \item costruire l'insieme $\mathbb{B}$ in modo automatico
-      attraverso le componenti fortemente connesse \emph{non} sembra
-      produrre risultati soddisfacenti
-    \item l'unico caso utile riguarda l'analisi di modelli singoli,
-      anche se in molti casi rimangono molti vertici in $\mathbb{B}$
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Ricerca delle componenti fortemente connesse}
-  Attualmente l'insieme $\mathbb{B}$ viene costruito in base a
-  osservazioni e studi \emph{empirici}, costituito da metaboliti con
-  propriet\`a particolari.
-
-  Per costruirlo in modo automatico partizioniamo la rete in
-  componenti connesse in quanto:
-\begin{itemize}
-\item<2-> \`e difficile assegnare il ruolo ad ogni vertice studiando
-  l'intera rete date le sue dimensioni
-\item<3-> \`e possibile astrarre dai cicli ed identificare classi di
-  metaboliti equivalenti
-\item<4-> due metaboliti equivalenti si producono a vicenda, pertanto
-  gli associamo il ruolo della componente che li contiene
-\item<5-> se una componente \`e \emph{sorgente} o \emph{pozzo} nel
-  ``meta grafo'' allora aggiungiamo i vertici che la compongono in
-  $\mathbb{B}$
-\end{itemize}
-\end{frame}
 
 \end{document}
 
