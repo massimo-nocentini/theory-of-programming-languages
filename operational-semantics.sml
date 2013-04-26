@@ -9,30 +9,26 @@ structure OperationalSemantics =
         fun     is_val (TmAbs (_, _, _)) = true
             |   is_val _ = false
 
-        fun tnmap onvar c t = 
+        (* the following function implements the definition 6.2.1 on pag. 79 *)
+        fun termShiftAbove d c t = 
             let
-                fun     walk c (TmVar (x, n)) = onvar c x n
+                fun     walk c (TmVar (k, n)) = 
+                            if k < c
+                            then TmVar (k, n+d)
+                            else TmVar (k+d, n+d)
                     |   walk c (TmAbs (x, tyT1, t1)) = 
                             TmAbs (x, tyT1, walk (c+1) t1) 
                     |   walk c (TmApp (t1, t2)) = TmApp (walk c t1, walk c t2)
             in walk c t end
 
-        (* the following function implements the definition 6.2.1 on pag. 79 *)
-        fun termShiftAbove d c t = 
-            tnmap   (fn c => fn x => fn n =>
-                        if x >= c 
-                        then TmVar (x+d, n+d)
-                        else TmVar (x, n+d))
-                    c t
-
         fun termShift d t = termShiftAbove d 0 t
 
-        fun termSubst j s t = 
-            tnmap   (fn c => fn x => fn n =>
-                        if x = c (* the book use the condition x = c + j *)
-                        then termShift c s
-                        else TmVar (x, n))
-                    j t
+        fun     termSubst j s (TmVar (k, n)) = 
+                    if k = j then s else TmVar (k, n) 
+            |   termSubst j s (TmAbs (x, tyT1, t1)) = 
+                    TmAbs (x, tyT1, termSubst (j+1) (termShift 1 s) t1) 
+            |   termSubst j s (TmApp (t1, t2)) = 
+                    TmApp ((termSubst j s t1), (termSubst j s t2))
 
         fun termSubstTop s t =
             termShift ~1 (termSubst 0 (termShift 1 s) t)

@@ -10,7 +10,7 @@ Library
     structure MySampleStructure
     structure LambdaCore
     structure LambdaContext
-
+    structure UnitTest
 is
     $/basis.cm
     $/smlnj-lib.cm
@@ -24,3 +24,4 @@ is
     lambda-context.sml
     operational-semantics.sml
     type-inference.sml
+    unittest.sml (with:print.depth=20)
