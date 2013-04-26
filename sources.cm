@@ -11,6 +11,7 @@ Library
     structure LambdaCore
     structure LambdaContext
     structure UnitTest
+    structure PrettyPrinter
 is
     $/basis.cm
     $/smlnj-lib.cm
@@ -25,3 +26,4 @@ is
     operational-semantics.sml
     type-inference.sml
     unittest.sml (with:print.depth=20)
+    pretty-printer.sml
