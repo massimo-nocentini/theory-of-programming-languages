@@ -7,6 +7,8 @@ structure MySampleStructure =
         structure TI = TypeInference
 
         val SOME term_option = Parser.parse "lambda  x:X->Y.( x  x)"
+        val SOME constraing_main_example = Parser.parse 
+            "lambda x:X.(lambda y:Y.(lambda z:Z.((x z) (y z))))"
         
         fun handle_term ctx nextuvar constr t = 
             let
@@ -50,7 +52,7 @@ structure MySampleStructure =
                                     input_str ^ "}"
                     |   SOME term => handle_term 
                                         Ctx.emptycontext 
-                                        (TI.uvargen ())
+                                        TI.uvargen 
                                         TI.emptyconstr 
                                         term
             end
@@ -61,7 +63,7 @@ structure MySampleStructure =
             in
                 print (handle_term 
                             Ctx.emptycontext 
-                            (TI.uvargen ())
+                            TI.uvargen 
                             TI.emptyconstr 
                             parsed_term)
             end

@@ -18,7 +18,7 @@ structure TypeInference =
         local
             fun f n () = NextUVar ("?X" ^ (Int.toString n), f (n+1))
         in
-            fun uvargen () = f 0
+            val uvargen = f 0
         end
 
         fun     recon ctx nextuvar (TmVar (x, n)) = 
