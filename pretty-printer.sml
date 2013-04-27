@@ -33,7 +33,7 @@ structure PrettyPrinter =
                         "lambda " ^ x' ^ ":" ^
                             (string_of_type false tyT1) ^ "." ^
                             (if is_small_term t2 andalso (not outer)
-                                then "\n" else " ") ^ 
+                                then " " else " ") ^ 
                             string_of_term outer ctx' t2
                     end
             |   string_of_term outer ctx other_term =
@@ -51,5 +51,7 @@ structure PrettyPrinter =
                     (string_of_atomic_term false ctx t2)
             |   string_of_app_term outer ctx other_term = 
                     string_of_atomic_term outer ctx other_term
+
+        val string_of_type_top = string_of_type true
 
     end
