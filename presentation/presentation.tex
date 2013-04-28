@@ -221,27 +221,27 @@
 \begin{frame}{Introduction}
     Up to now we've worked with terms which all depends on
     \emph{explicit} type annotation, that is every $\lambda$-
-    abstraction have to say the \emph{concrete} type for the variable
+    abstraction have to declare the \emph{concrete} type for the variable
     it introduce. \\~\\
     \pause
     It should be interesting to be ``lazy'' (in the fisical sense, not
     because we like to be some instance of a \emph{lazy} structures 
     \smiley) and say:
     \begin{center}
-        I don't care to fix a \emph{concrete} type for my variable now,\\
-        suspend the decision and call this type $X$, I'll specify it later.
+        ``I don't care to declare a \emph{concrete} type for my variable now,\\
+        suspend the decision and call this type $X$, I'll specify it later''
     \end{center}
     \pause 
     Suppose we're deeply ``lazy'', why not apply the previous though
-    to \emph{all} variable we introduce in our program? When are our terms 
-    well typed if no type is fixed at all? \\~\\
+    to \emph{all} variables we introduce in our program? When are our terms 
+    well typed if no concrete type is declared at all? \\~\\
     \pause
     In this lecture we'll see a method which allow us to be ``deeply lazy''
     while been able to type our meaningful terms and discard divergent ones
     (\texttt{lambda x.(x x)}, remember?)
 \end{frame}
 
-\begin{frame}{Augment types with type variables}
+\begin{frame}{Augment type set with type variables}
     In order to leave unspecified the type for a variable we've to augment
     our language with a new type category, which we'll call \emph{type
     variables}, written as $\mathcal{A}$:
@@ -282,7 +282,7 @@
 
 \begin{frame}{Substitutions}
     \begin{center}
-        ``I know that type variable $X$ in my term $t$ stands for 
+        ``I'd like that type variable $X$ in my term $t$ to stands for 
         \texttt{Nat} type. \\Is it possible to do a \emph{substitution}?''
     \end{center}
 
@@ -290,7 +290,7 @@
     \begin{block}{Definition of substitution}
         A \emph{type substitution} $\sigma$ is a mapping $\sigma: \mathcal{A}
         \rightarrow T$ \\~\\
-        A \emph{substitution application} $\sigma(T_{1})$ 
+        A \emph{substitution application} $\sigma T_{1}$ 
         of a type substitution $\sigma$ to a type $T_{1}$ is defined 
         inductively on the structure of types:
         \begin{displaymath}
@@ -330,8 +330,11 @@
 
 \begin{frame}{Typing relation is closed under substitution application}
     \begin{theorem}
-        Let $\sigma$ be a type substitution. $\Gamma \vdash t:T 
-        \rightarrow \sigma\Gamma \vdash \sigma t: \sigma T$
+        Let $\sigma$ be a type substitution, $\Gamma$ a context, 
+        $T_1 \in T$ and $t$ a term. Then:
+        \begin{displaymath}
+            \Gamma \vdash t:T_1 \rightarrow \sigma\Gamma \vdash \sigma t: \sigma T_1
+        \end{displaymath}
     \end{theorem}
     \begin{proof}
         TODO
@@ -362,7 +365,7 @@
             \pause
             Holding type variables abstract during type checking is called
             \emph{parametric polymorphism}: type variables are used to allow
-            a term in which they appear usable in many concrete contexts.
+            a term in which they appear usable in many concrete contexts
     \end{itemize}
 \end{frame}
 
@@ -372,7 +375,7 @@
     \begin{itemize}
         \item $\exists \sigma. \exists T_1: 
             \sigma \Gamma \vdash \sigma t : T_1$\\
-            {\footnotesize It is always possible to find a type 
+            {\footnotesize Is it always possible to find a type 
                 sustitution $\sigma$ such that the term 
                 $\sigma t$ is typeable under assumption $\sigma \Gamma$?}\\~\\
             If this is the case, suppose $\not \exists T_{1}.
@@ -390,7 +393,7 @@
             \pause
             Looking for valid ``instantiations'' of type variables is called
             \emph{type inference}: the compiler fill in type information 
-            whereever the user don't specify them
+            wherever the user don't specify them
     \end{itemize}
 \end{frame}
 
