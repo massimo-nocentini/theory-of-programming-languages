@@ -278,11 +278,69 @@
     \end{example}
 \end{frame}
 
+\begin{frame}{Substitutions}
+    \begin{center}
+        ``I know that type variable $X$ in my term $t$ stands for 
+        \texttt{Nat} type. \\Is it possible to do a \emph{substitution}?''
+    \end{center}
+
+    \pause
+    \begin{block}{Definition of substitution}
+        A \emph{type substitution} $\sigma$ is a mapping $\sigma: \mathcal{A}
+        \rightarrow T$ \\~\\
+        A \emph{substitution application} $\sigma(T_{1})$ 
+        of a type substitution $\sigma$ to a type $T_{1}$ is defined 
+        inductively on the structure of types:
+        \begin{displaymath}
+            \begin{split}
+                X \in \mathcal{A} \wedge \exists T_1: (X \mapsto T_{1}) 
+                    \in \sigma & \rightarrow \sigma X = T_{1} \\ 
+                X \in \mathcal{A} \wedge \forall T_1: (X \mapsto T_{1}) 
+                    \not \in \sigma & \rightarrow \sigma X = X \\ 
+                T_{1} \text{ is a concrete type } &\rightarrow  
+                    \sigma T_{1} = T_{1}\\
+                T_{1}, T_{2} \in T & \rightarrow \sigma(T_{1} \rightarrow 
+                    T_{2}) = \sigma T_{1} \rightarrow \sigma T_{2} \\ 
+            \end{split}
+        \end{displaymath}
+    \end{block}
+    \pause
+    For the following it is useful to introduce two combinations 
+    (let $\mathcal{C}$ is a set of contexts):
+    \begin{itemize}
+        \item $\Gamma = \{ x_1:T_1, \ldots, x_n:T_n\} \in \mathcal{C} 
+            \rightarrow \sigma\Gamma = (x_1:\sigma T_1, \ldots,
+                x_n:\sigma T_n) \in \mathcal{C}$
+        \item let $\sigma, \gamma$ be two type substitutions, their
+            composition $\sigma \circ \gamma$ is defined as follows:
+            \begin{displaymath}
+                \begin{split}
+                    \sigma \circ \rho &= \{X \mapsto \sigma T_1 | \,
+                        \forall T_1:(X \mapsto T_1) \in \rho \} \\
+                    \sigma \circ \rho &= \{X \mapsto T_1 |\, 
+                        \forall T_{1}:(X \mapsto T_1) \in \sigma \wedge
+                            \forall T_{2}:(X \mapsto T_2) \not \in \rho\} \\
+                \end{split}
+            \end{displaymath}
+            
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Typing relation is closed under substitution application}
+    \begin{theorem}
+        Let $\sigma$ be a type substitution. $\Gamma \vdash t:T 
+        \rightarrow \sigma\Gamma \vdash \sigma t: \sigma T$
+    \end{theorem}
+    \begin{proof}
+        TODO
+    \end{proof}
+\end{frame}
+
 \section{Constrait-based typing}
 
 \section{Unification}
 
-\section{Limitations and worst-cases}
+\section{Limitations, worst-cases and complexity}
 
 \section{Interpreter}
 
