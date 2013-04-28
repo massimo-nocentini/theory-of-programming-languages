@@ -185,7 +185,8 @@
                 $ & (\emph{E-APP1}) \\ 
                & \\
                $\displaystyle{{t_{2} \rightarrow t_{2}^{\prime}}\over
-                    {v_{1} \, t_{2} \rightarrow v_{1} \, t_{2}^{\prime}}}$ & (\emph{E-APP2}) \\
+                    {v_{1} \, t_{2} \rightarrow v_{1} \, t_{2}^{\prime}}}$ &
+                         (\emph{E-APP2}) \\
                & \\ 
                $\displaystyle(\lambda x:T_{11}.t_{12})v_{2} \rightarrow 
                 [x \mapsto v_{2}]t_{12}$ & (\emph{E-APPABS}) \\
@@ -205,16 +206,83 @@
                     {\Gamma \vdash \lambda x:T_{1}.t_{2} : T_{1} 
                         \rightarrow T_{2}}} $ & (\emph{T-ABS}) \\
                & \\ 
-               $\displaystyle{{\Gamma \vdash t_{1}:T_{11} \rightarrow T_{12} \quad \Gamma \vdash t_{2}:T_{11}}\over
+               $\displaystyle{{\Gamma \vdash t_{1}:T_{11} \rightarrow T_{12} \quad
+                     \Gamma \vdash t_{2}:T_{11}}\over
                     {\Gamma \vdash t_{1} \, t_{2} : T_{12}}} $ & (\emph{T-APP}) \\
             \end{tabular}
         \end{center}
     \end{block}
 \end{frame}
 
+\section{Type variables and substitutions}
+
+\begin{frame}{Introduction}
+    Up to now we've worked with terms which all depends on
+    \emph{explicit} type annotation, that is every $\lambda$-
+    abstraction have to say the \emph{concrete} type for the variable
+    it introduce. \\~\\
+    \pause
+    It should be interesting to be ``lazy'' (in the fisical sense, not
+    because we like to be some instance of a \emph{lazy} structures 
+    \smiley) and say:
+    \begin{center}
+        I don't care to fix a \emph{concrete} type for my variable now,\\
+        suspend the decision and call this type $X$, I'll specify it later.
+    \end{center}
+    \pause 
+    Suppose we're deeply ``lazy'', why not apply the previous though
+    to \emph{all} variable we introduce in our program? When are our terms 
+    well typed if no type is fixed at all? \\~\\
+    \pause
+    In this lecture we'll see a method which allow us to be ``deeply lazy''
+    while been able to type our meaningful terms and discard divergent ones
+    (\texttt{lambda x.(x x)}, remember?)
+\end{frame}
+
+\begin{frame}{Augment types with type variables}
+    In order to leave unspecified the type for a variable we've to augment
+    our language with a new type category, which we'll call \emph{type
+    variables}, written as $\mathcal{A}$:
+    \begin{block}{Types - augmented with type variables}
+        \begin{center}
+            \begin{tabular}{ r l l }
+              $T ::= $ & $T \rightarrow T$ & \emph{function type} \\
+               & $\mathcal{A}$ & \emph{type variable} \\
+              $\mathcal{A} ::= $ & $\{A,B,\ldots,X_{i \in \mathbb{N}},
+                \ldots \}$ & \emph{type variables} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+    \pause
+    Let $X \in \mathcal{A}$:
+    \begin{itemize}
+        \item there's no typing rule that use the category $\mathcal{A}$
+        \item $X$ can represent a \emph{basic} type
+            (ie. \texttt{Bool}, \texttt{Nat}, \ldots) or another 
+            unspecified type
+        \item $X$, being a type, can be used by the defined typing rules
+        \item $X \not = Y, \forall Y \in \mathcal{A} \setminus \{X\}$, 
+            in other words, $\mathcal{A}$ is infinite and types represented
+            by different type variables are different too
+    \end{itemize}
+    \pause
+    \begin{example}
+        \begin{displaymath}
+            \begin{split}
+                \Gamma &\vdash \lambda x:X.x : X \rightarrow X\\
+                \Gamma &\vdash \lambda x:A.x : A \rightarrow A\\
+                \Gamma &\vdash \lambda s:S. \lambda z: Z. (s\, (s\, z)) : 
+                    (Z \rightarrow Z) \rightarrow Z \rightarrow Z\\
+            \end{split}
+        \end{displaymath}
+    \end{example}
+\end{frame}
+
 \section{Constrait-based typing}
 
 \section{Unification}
+
+\section{Limitations and worst-cases}
 
 \section{Interpreter}
 
@@ -362,7 +430,8 @@ where:
             \begin{split}
                 [x \mapsto s]x &= s \\
                 [x \mapsto s]y &= y \quad \text{if } x \not = y\\
-                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. t_{1} \quad \text{if } x = y\\
+                [x \mapsto s](\lambda y.t_{1}) &= \lambda y. t_{1} \quad 
+                    \text{if } x = y\\
                 [x \mapsto s](\lambda y.t_{1}) &= \lambda y. [x \mapsto s]t_{1} 
                                     \quad \text{if } x \not = y 
                                     {\color{red}\wedge y \not \in FV(s)}\\
@@ -378,7 +447,8 @@ where:
         \begin{displaymath}
             \begin{split}
                 [x \mapsto z](\lambda z.x) &\not = \lambda z.z \quad \smiley\\ 
-                [x \mapsto z](\lambda z.x) &\quad \text{yields no term at all!} \quad \frownie\\
+                [x \mapsto z](\lambda z.x) &\quad \text{yields no term at all!} 
+                    \quad \frownie\\
             \end{split}
         \end{displaymath}
     \end{alertblock}
@@ -406,7 +476,8 @@ where:
             \begin{split}
                 [x \mapsto y \, z](\lambda y.x \, y) &
                     \text{ renames abstraction to } (\lambda w.x \, w)\\ 
-                [x \mapsto y \, z](\lambda w.x \, w) &= \lambda w. y \, z \, w \quad \smiley\\
+                [x \mapsto y \, z](\lambda w.x \, w) &= \lambda w. y \, z \, w 
+                    \quad \smiley\\
             \end{split}
         \end{displaymath}
     \end{example}
