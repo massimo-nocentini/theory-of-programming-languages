@@ -214,7 +214,9 @@
     \end{block}
 \end{frame}
 
-\section{Type variables and substitutions}
+\section{Introduction}
+
+\subsection{Type variables and substitutions}
 
 \begin{frame}{Introduction}
     Up to now we've worked with terms which all depends on
@@ -334,6 +336,80 @@
     \begin{proof}
         TODO
     \end{proof}
+\end{frame}
+
+\subsection{Parametric polymorphism and type inference}
+
+\begin{frame}{Parametric Polymorphism}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables.
+    A first question arises:
+    \begin{itemize}
+        \item $\forall \sigma. \exists T_1: 
+            \sigma \Gamma \vdash \sigma t : T_1$\\
+            {\footnotesize Do all type sustitution $\sigma$ makes the term 
+                $\sigma t$ typeable under assumption $\sigma \Gamma$?}\\~\\
+            If this is the case, why not write \emph{any} concrete type
+            using a type variable and use a substitution to obtain the 
+            original one? 
+            \pause
+            \begin{example}
+                Write $\lambda s:Z \rightarrow Z.\lambda z:Z.(s\, (s\, z))$
+                instead of $\lambda s:Nat \rightarrow Nat.
+                    \lambda z:Nat.(s\, (s\, z))$ \\~\\
+                For example, if we work with concrete type $String$ just use 
+                $\sigma = \{Z \mapsto String\} $
+            \end{example}
+            \pause
+            Holding type variables abstract during type checking is called
+            \emph{parametric polymorphism}: type variables are used to allow
+            a term in which they appear usable in many concrete contexts.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Type inference}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables.
+    A second question arises:
+    \begin{itemize}
+        \item $\exists \sigma. \exists T_1: 
+            \sigma \Gamma \vdash \sigma t : T_1$\\
+            {\footnotesize It is always possible to find a type 
+                sustitution $\sigma$ such that the term 
+                $\sigma t$ is typeable under assumption $\sigma \Gamma$?}\\~\\
+            If this is the case, suppose $\not \exists T_{1}.
+            \Gamma \not \vdash t:T_1$, using 
+            type substitution $\sigma$ we're able to give a type $T_{2}$ 
+            to $\sigma t$, formally $\sigma \Gamma \vdash \sigma t: T_{2}$
+            \pause
+            \begin{example}
+                $\lambda s:S.\lambda z:Z.(s\, (s\, z))$ 
+                has {\color{red} no} type, $\forall S,Z \in \mathcal{A}$\\~\\
+                but it has type if we use $\sigma = \{
+                    S \mapsto Nat \rightarrow Nat, Z \mapsto Nat\}$ or
+                    $\sigma = \{S \mapsto Z \rightarrow Z\}$
+            \end{example}
+            \pause
+            Looking for valid ``instantiations'' of type variables is called
+            \emph{type inference}: the compiler fill in type information 
+            whereever the user don't specify them
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables.
+    \begin{block}{Definition of solution}
+        A \emph{solution} for $(\Gamma, t)$ is a pair $(\sigma, T_{1})$, where
+        $\sigma$ is a type substitution and $T_{1} \in T$, such that 
+        $\sigma \Gamma \vdash \sigma t:T_{1}$
+    \end{block}
+    \pause
+    \begin{example}
+        Let $\Gamma = \{f:X, a:Y\}$ and $t = f\, a$ then:
+        \begin{displaymath}
+            ([X \mapsto Nat \rightarrow Nat, Y \mapsto Nat], Nat) \quad 
+            ([X \mapsto Y \rightarrow Z], Z)
+        \end{displaymath}
+        are both solutions for $(\Gamma, t)$.
+    \end{example}
 \end{frame}
 
 \section{Constrait-based typing}
