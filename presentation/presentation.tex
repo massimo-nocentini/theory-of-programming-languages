@@ -397,12 +397,14 @@
     \end{itemize}
 \end{frame}
 
+\subsection{Definition of solution for $(\Gamma, t)$}
+
 \begin{frame}
     Let $\Gamma$ be a context and $t$ be a term containing free variables.
-    \begin{block}{Definition of solution}
-        A \emph{solution} for $(\Gamma, t)$ is a pair $(\sigma, T_{1})$, where
-        $\sigma$ is a type substitution and $T_{1} \in T$, such that 
-        $\sigma \Gamma \vdash \sigma t:T_{1}$
+    \begin{block}{Definition of \emph{solution} for $(\Gamma, t)$}
+        Let $\sigma$ be a type substitution and $T_{1} \in T$.\\
+        A  \emph{solution} for $(\Gamma, t)$ is a pair $(\sigma, T_{1})$
+        such that $\sigma \Gamma \vdash \sigma t:T_{1}$
     \end{block}
     \pause
     \begin{example}
@@ -456,6 +458,7 @@
     \end{itemize}
 \end{frame}
 
+
 \begin{frame}
     Let's see an example of how we collect a constraint $S \triangleq T$
     \begin{example}
@@ -477,6 +480,7 @@
         \item given a pair $(\Gamma, t)$ there always exist a constraint set?
         \item suppose a constraint exists, is it unique?
         \item assume the existence is enough, how is its construction defined?
+        \item how can we use the constraint set to build a solution for $(\Gamma, t)$?
     \end{itemize}
 \end{frame}
 
@@ -518,8 +522,71 @@
                         \{X\}} \; \mathcal{C}^{\prime} }}}} $ & (\emph{CT-APP}) \\
                 \end{tabular}
             \end{center}
-
+        The set $\mathcal{X}$ is used to track type variables introduced
+            by applications of rule \emph{CT-APP}
     \end{block}
+\end{frame}
+
+\begin{frame}
+    \begin{example}
+    \end{example}
+\end{frame}
+
+\subsection{Definition of solution for $(\Gamma, t, S, \mathcal{C})$}
+
+\begin{frame}
+    It is helpful make the following observations:
+    \begin{itemize}
+        \item when a type variable $X$ is choosen by a final rule which has
+            some premises, then $X$ is different from all other type variables
+            introduced by premises' subderivations
+        \item for any given pair $(\Gamma, t)$ the rules provide a procedure to 
+            build sets $\mathcal{X}, \mathcal{C}$ and find type $T_1$ such that
+            $\Gamma \vdash t : T_1 \; \textbar_\mathcal{X} \; \mathcal{C}$
+        \item if we consider the relation  
+            $\Gamma \vdash t : T_1 \; \textbar_\mathcal{X} \; \mathcal{C}$ modulo
+            the choice of fresh variables, then the constraint set $\mathcal{C}$ and
+            type $T_1$ are \emph{uniquely} determined
+        \item in order to find solutions for $(\Gamma, t)$ we use the given rules to:
+            \begin{enumerate}
+                \item build the constraint set $\mathcal{C}$, that
+                    must be satisfied in order for $t$ to have a type
+                \item determine a type $S$ possibly containing type variables (which are 
+                    subjects under constraints in $\mathcal{C}$), which caracterizes
+                    the types of $t$ in terms of these variables
+                \item find a type sustitution $\sigma$ such that $\sigma \Join 
+                    \mathcal{C}$: for each such $\sigma$ the type $\sigma S$ is
+                    a possible type for $t$, hence $(\sigma, \sigma S)$ 
+                    is a solution for $(\Gamma, t)$
+                \item if no type sustitution $\sigma \Join \mathcal{C}$ exists then
+                    there is no way to instantiate type variables in $t$ in order
+                    for $t$ to have a type.
+            \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables.
+    \begin{block}{Definition of \emph{solution} for $(\Gamma, t, S, \mathcal{C})$}
+        Let $\sigma$ be a type substitution and $T_{1} \in T$ and suppose
+            $\Gamma \vdash t : T_1 \; \textbar_\mathcal{X} \; \mathcal{C}$ \\
+        A  \emph{solution} for $(\Gamma, t, S, \mathcal{C})$ is a pair 
+        $(\sigma, T_{1})$ such that $\sigma \Join \mathcal{C} \wedge \sigma S = T_1$
+    \end{block}
+    \pause
+    \begin{example}
+        Let $t = \lambda x:X\rightarrow Y. x \, 0$ then:
+        \begin{displaymath}
+            \begin{split}
+                S &= (X \rightarrow Y) \rightarrow Z \\
+                \mathcal{C} &= \{Nat \rightarrow Z \triangleq X \rightarrow Y\}\\
+                \sigma &= \{X \mapsto Nat, Z \mapsto Bool, Y \mapsto Bool\}\\
+            \end{split}
+        \end{displaymath}
+        hence $(\sigma, (Nat \rightarrow Bool) \rightarrow Bool)$ is a solution 
+        for $(\Gamma, t, S, \mathcal{C})$.
+    \end{example}
 \end{frame}
 
 \section{Unification}
