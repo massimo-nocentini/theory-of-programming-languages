@@ -588,6 +588,37 @@
         for $(\Gamma, t, S, \mathcal{C})$.
     \end{example}
 \end{frame}
+\subsection{Soundness and Completeness of Constraint typing}
+\begin{frame}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables\\~\\
+    We have two different ways of instantiating type variables appearing in $t$
+    to produce a typeable term. In the next definitions $\sigma$ is a type
+    sustitution and $T_1 \in T$ as usual:
+    \begin{block}{Declarative approach}
+        $\Omega = \{ \omega = (\sigma, T_1): \omega\text{ is solution of } (\Gamma, t)\}$
+    \end{block}
+
+    \begin{block}{Algorithmic approach}
+        $\Theta = \{ \theta = (\sigma, T_1): \theta\text{ is solution of } 
+            (\Gamma, t, S, \mathcal{C})\}$
+    \end{block}
+    
+    \pause
+
+    \begin{theorem}
+    $\Omega = \Theta$    
+    \end{theorem}
+\end{frame}
+
+\begin{frame}
+    \begin{proof}[Proof. Soundness of Constraint typing]
+    \end{proof}
+\end{frame}
+
+\begin{frame}
+    \begin{proof}[Proof. Completeness of Constraint typing]
+    \end{proof}
+\end{frame}
 
 \section{Unification}
 
