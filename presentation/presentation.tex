@@ -416,15 +416,111 @@
 \end{frame}
 
 \section{Constrait-based typing}
-As we've seen in the last example, there exists possibly countable solutions
-for a pair $(\Gamma, t)$. Are they related in some way? \\~\\
-\pause
-\begin{block}{Definition of constraint set}
-    A \emph{constraint set} $\mathcal{C}$ is a set of equations 
-    $\{S_i = T_i \}_{i \in \mathbb{N}}$ such that 
-    $\mathcal{C} \subseteq \mathcal{A} \times T$
-\end{block}
+\subsection{Constraint set and relations}
+\begin{frame}
+    Questions:
+    \begin{itemize}
+        \item During an execution of a type-checking algorithm, why
+                    not record constraints of the form $S_i = T_i$ instead 
+                    to actually perform a type comparison?
+        \item As we've seen in the last example, there exists countable 
+                    solutions for a pair $(\Gamma, t)$, are they related in 
+                    some way? 
+    \end{itemize}
+    \pause
+    \begin{block}{Definition of \emph{constraint set} 
+                    and \emph{unify} relation}
+        A \emph{constraint set} $\mathcal{C}$ is a set of equations 
+        $\{S_i \triangleq T_i \}_{i \in \mathbb{N}}$ such that 
+        $\mathcal{C} \subseteq T \times T$
+        \\~\\
+        A type substitution $\sigma$ \emph{unify} an equation 
+        $S \triangleq T$, written as $\sigma \Join S \triangleq T$, 
+        if $\sigma S = \sigma T$
+        \\~\\
+        Extending the unification relation to constraint sets, a type substitution
+        $\sigma$ \emph{unify} a constraint set $\mathcal{C}$, written as 
+        $\sigma \Join \mathcal{C}$, if $\forall (S \triangleq T)
+        \in \mathcal{C}: \sigma \Join (S \triangleq T)$ 
+    \end{block}
+    \pause
+    Answers:
+    \begin{itemize}
+        \item The modified type checking algorithm prove that a 
+            term $t$ has type $T_1$ under assumptions $\Gamma$ 
+            whenever there exists a type substitution $\sigma$ such that 
+            $\sigma \Join \mathcal{C}$
+        \item let $\mathcal{C}$ be a constraint set for a pair $(\Gamma, t)$.
+            Two solutions $(\sigma_1,T_1)$ and $(\sigma_2,T_2)$ are related if  
+            $\sigma_1 \Join \mathcal{C}$ and $\sigma_2 \Join \mathcal{C}$ 
+    \end{itemize}
+\end{frame}
 
+\begin{frame}
+    Let's see an example of how we collect a constraint $S \triangleq T$
+    \begin{example}
+        Suppose to have an application term $t_1 t_2$ with $\Gamma \vdash t_1 : T_1$
+        and $\Gamma \vdash t_2 : T_2$ \\~\\
+        Instead of checking:
+        \begin{itemize}
+            \item $T_1$ has the form $T_2 \rightarrow T_{12}$, for some $T_{12}$
+            \item $t_1 t_2$ has type \emph{exactly} $T_{12}$
+        \end{itemize}
+        We suspend a decision for the type $T_{12}$, abstracting it with a 
+        \emph{fresh} type variable $X$, creating the constraint 
+        $T_1 \triangleq T_2 \rightarrow X$ (hence $t_1 t_2$
+        has type $X$ from now on!)
+    \end{example}
+    \pause
+    The following questions drive what follow:
+    \begin{itemize}
+        \item given a pair $(\Gamma, t)$ there always exist a constraint set?
+        \item suppose a constraint exists, is it unique?
+        \item assume the existence is enough, how is its construction defined?
+    \end{itemize}
+\end{frame}
+
+\subsection{Constraint typing relation}
+
+\begin{frame}
+    \begin{block}{Definition of \emph{constraint typing relation} 
+            $\Gamma \vdash t : T_1 \; \textbar_\mathcal{X} \; \mathcal{C}$}
+        The \emph{constraint typing relation} where a term $t$ has type
+            $T_1$ under assumptions $\Gamma$ 
+            whenever exists a type substitution $\sigma$ such that 
+            $\sigma \Join \mathcal{C}$, written as
+            $\Gamma \vdash t : T_1 \textbar_\mathcal{X} \mathcal{C}$,
+            is defined inductively as follow:
+            \begin{center}
+                \begin{tabular}{ c r }
+                        $\displaystyle {{x:T \in \Gamma}\over
+                        {\Gamma \vdash x:T \; \textbar_{\emptyset}\;  \emptyset}} $ 
+                            & (\emph{CT-VAR}) \\ 
+                   & \\
+                   $\displaystyle{{\Gamma, x:T_{1} \vdash t_{2}:T_{2}\;
+                    \textbar_{\mathcal{X}} \; \mathcal{C} }\over
+                        {\Gamma \vdash \lambda x:T_{1}.t_{2} : T_{1} 
+                            \rightarrow T_{2}\;
+                    \textbar_{\mathcal{X}} \; \mathcal{C} }} $ & (\emph{CT-ABS}) \\
+                   & \\ 
+                   ${\displaystyle{{{
+                        \begin{array}{rl}
+                         \text{let} & X \text{ be fresh variable} \\
+                        \Gamma \vdash & t_{1}:T_{1} \; \textbar_{\mathcal{X}_1} \;
+                            \mathcal{C}_1  \\
+                        \Gamma \vdash & t_{2}:T_{2} \; \textbar_{\mathcal{X}_2} \;
+                            \mathcal{C}_2  \\
+                         \mathcal{C}^{\prime} = & \mathcal{C}_1 \cup \mathcal{C}_2
+                            \cup \{ T_1 \triangleq T_2 \rightarrow X \}
+                        \end{array}}\over
+                        {\Gamma \vdash t_{1} \, t_{2} : X\;
+                    \textbar_{\mathcal{X}_1 \cup \mathcal{X}_2 \cup
+                        \{X\}} \; \mathcal{C}^{\prime} }}}} $ & (\emph{CT-APP}) \\
+                \end{tabular}
+            \end{center}
+
+    \end{block}
+\end{frame}
 
 \section{Unification}
 
