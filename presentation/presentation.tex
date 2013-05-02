@@ -689,7 +689,7 @@
             with $[X \mapsto T_1]$ , but 
             $[ X \mapsto T_1]\mathcal{C}^{\prime}$ has a variable less, 
             so has a smaller degree than $\{X \triangleq T_1\} \cup \mathcal{C}^{\prime}$,
-            hence induction hp applies
+            hence induction hp applies and composition always halt
             \item $unify(\{T_1 \rightarrow T_2 \triangleq S_1\rightarrow S_2 \} 
                     \cup \mathcal{C}^{\prime})$ does what
                     $unify(\mathcal{C}^{\prime} \cup \{T_1 \triangleq S_1,
@@ -708,13 +708,83 @@
     \end{proof}
     \normalsize
 \end{frame}
+
 \begin{frame}
     \begin{theorem}
         $unify(\mathcal{C}) = \sigma \rightarrow \sigma \Join \mathcal{C}$
     \end{theorem}
-    \begin{proof}
+    \footnotesize
+    \begin{proof}[Proof. By structural induction on $\mathcal{C}$]
+    \textbf{Base} $\mathcal{C} = \emptyset$, 
+        $unify(\emptyset) = [\,]$ applies, 
+        $\forall\sigma: \sigma \Join \emptyset$ (no equation needs 
+        to be unified)\\
+    \textbf{Induction HP} assume the theorem holds for a generic
+        $\mathcal{C}^{\prime}$ and prove for a new set 
+        $\{T_1 \triangleq T_2\} \cup \mathcal{C}^{\prime}$
+        where $T_1,T_2 \in T$ (possibly containing type variables) \\
+    \textbf{Induction Step} proceed by pattern matching on the 
+        structure of the new set $\{T_1 \triangleq T_2\} \cup 
+        \mathcal{C}^{\prime}$: 
+        \begin{itemize}
+            \item $unify(\{T_1 \triangleq T_2\} \cup \mathcal{C}^{\prime})
+                \quad \text{if } T_1 = T_2$ does what 
+                $unify(\mathcal{C}^{\prime})$ does: by induction hp 
+                $unify(\mathcal{C}^{\prime}) = \sigma \rightarrow
+                \sigma \Join \mathcal{C}^{\prime}$, but the added equation
+                is already an identity, hence $\sigma \Join 
+                \{T_1 \triangleq T_2\} \cup \mathcal{C}^{\prime}$ 
+                if $ T_1 = T_2$
+
+            \item Let $X \in \mathcal{A}$: $unify(\{X \triangleq T_1\}
+            \cup \mathcal{C}^{\prime})$
+            compose what $unify([ X \mapsto T_1]\mathcal{C}^{\prime})$ 
+            returns with $[X \mapsto T_1]$: by induction hp, 
+            $unify([ X \mapsto T_1]\mathcal{C}^{\prime}) = \sigma
+            \rightarrow \sigma \Join [ X \mapsto T_1]\mathcal{C}^{\prime}$
+            , hence the composition $\rho$, defined as 
+            $\sigma \circ [ X \mapsto T_1]$, is such that $\rho \Join
+            \{X \triangleq T_1\} \cup \mathcal{C}^{\prime}$
+
+            \item $unify(\{T_1 \rightarrow T_2 \triangleq 
+                S_1\rightarrow S_2 \} \cup \mathcal{C}^{\prime})$ 
+                does what
+                $unify(\mathcal{C}^{\prime} \cup \{T_1 \triangleq S_1,
+                    T_2 \triangleq S_2\})$ does: by induction hp 
+                    $unify(\mathcal{C}^{\prime} \cup \{T_1 \triangleq S_1,
+                    T_2 \triangleq S_2\}) = \sigma \rightarrow 
+                    \sigma \Join
+                    \mathcal{C}^{\prime} \cup \{T_1 \triangleq S_1,
+                    T_2 \triangleq S_2\}$. To unify $T_1 \rightarrow 
+                    T_2 \triangleq S_1\rightarrow S_2 $ use def of 
+                    substitution application: $\sigma 
+                    (T_1 \rightarrow T_2 ) = \sigma T_1 \rightarrow 
+                    \sigma T_2$ and  $\sigma 
+                    (S_1 \rightarrow S_2 ) = \sigma S_1 \rightarrow 
+                    \sigma S_2$. Since $\sigma \Join
+                    \mathcal{C}^{\prime} \cup \{T_1 \triangleq S_1,
+                    T_2 \triangleq S_2\}$ the arrow types 
+                    $\sigma T_1 \rightarrow \sigma T_2$ and
+                    $\sigma S_1 \rightarrow \sigma S_2$ are really the
+                    same, hence
+                    $\sigma \Join \{T_1 \rightarrow T_2 \triangleq 
+                    S_1\rightarrow S_2 \} \cup \mathcal{C}^{\prime}$
+                    
+                    \item if $\{T_1 \triangleq T_2\} \cup \mathcal{C}
+                        ^{\prime}$ has a different structure 
+                        from the above ones, 
+                        $unify(\{T_1 \triangleq T_2\} \cup \mathcal{C}
+                        ^{\prime})$ fails to return a type substitution,
+                        hence the theorem is vacaously true by
+                        ``ex falso quod libet''
+        \end{itemize}
+        All structures of $\mathcal{C}$ have been covered, hence 
+        $unify(\mathcal{C})=\sigma \rightarrow \sigma \Join \mathcal{C}$,
+        this complete the induction.
     \end{proof}
+    \normalsize
 \end{frame}
+
 \begin{frame}
     \begin{theorem}
         $\rho \Join \mathcal{C} \rightarrow unify(\mathcal{C}) = \sigma \wedge 
