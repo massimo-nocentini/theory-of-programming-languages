@@ -318,10 +318,10 @@
             \begin{displaymath}
                 \begin{split}
                     \sigma \circ \rho &= \{X \mapsto \sigma T_1 | \,
-                        \forall T_1:(X \mapsto T_1) \in \rho \} \\
-                    \sigma \circ \rho &= \{X \mapsto T_1 |\, 
-                        \forall T_{1}:(X \mapsto T_1) \in \sigma \wedge
-                            \forall T_{2}:(X \mapsto T_2) \not \in \rho\} \\
+                        \forall T_1:(X \mapsto T_1) \in \rho \} \cup \\
+                    &\quad \{X \mapsto T_1 |\, 
+                        \forall T_{1}:\left( (X \mapsto T_1) \in \sigma \wedge
+                            (X \mapsto T_1) \not \in \rho\right)\} \\
                 \end{split}
             \end{displaymath}
             
@@ -663,10 +663,50 @@
 
 \begin{frame}
     \begin{theorem}
-        $unify(\mathcal{C})$ halts
+        $unify(\mathcal{C})$ halts, either by failing or by returning a type 
+        substitution $\sigma$
     \end{theorem}
-    \begin{proof}
+    \footnotesize
+    Call \emph{degree} of a constraint set $\mathcal{C}$ a pair $(m,n)$ where
+    $m$ is the number of distinct type variables and $n$ is the number of
+    distinct types in $\mathcal{C}$
+    \begin{proof}[Proof. By complete induction on the degree of $\mathcal{C}$]
+    \textbf{Base} $(0,0) \equiv \mathcal{C} = \emptyset$, 
+        $unify(\emptyset) = [\,]$ applies, which returns the empty substitution\\
+    \textbf{Induction HP} assume the theorem holds 
+        $\forall (s,t): (s,t) < (m,n)$ \\
+    \textbf{Induction Step} proceed by pattern matching on the 
+        structure of $\mathcal{C}$: 
+        \begin{itemize}
+            \item $unify(\{T_1 \triangleq T_2\} \cup \mathcal{C}^{\prime})
+                    \quad \text{if } T_1 = T_2$ does what 
+                    $unify(\mathcal{C}^{\prime})$ does, but $\mathcal{C}^{\prime}$ 
+                    has a type less, so
+                    has a smaller degree than $\{T_1 \triangleq T_2\} \cup 
+                    \mathcal{C}^{\prime}$, hence induction hp applies 
+            \item $unify(\{X \triangleq T_1\} \cup \mathcal{C}^{\prime})$ compose
+            what $unify([ X \mapsto T_1]\mathcal{C}^{\prime})$ returns 
+            with $[X \mapsto T_1]$ , but 
+            $[ X \mapsto T_1]\mathcal{C}^{\prime}$ has a variable less, 
+            so has a smaller degree than $\{X \triangleq T_1\} \cup \mathcal{C}^{\prime}$,
+            hence induction hp applies
+            \item $unify(\{T_1 \rightarrow T_2 \triangleq S_1\rightarrow S_2 \} 
+                    \cup \mathcal{C}^{\prime})$ does what
+                    $unify(\mathcal{C}^{\prime} \cup \{T_1 \triangleq S_1,
+                        T_2 \triangleq S_2\})$ does, but 
+                        $\mathcal{C}^{\prime} \cup \{T_1 \triangleq S_1,
+                            T_2 \triangleq S_2\}$ has two arrow types less,
+                        so has a smaller degree than 
+                        $\{T_1 \rightarrow T_2 \triangleq S_1\rightarrow S_2 \} 
+                            \cup \mathcal{C}^{\prime}$, hence induction hp applies
+            \item if $\mathcal{C}$ has a different structure from the above ones, 
+                $unify(\mathcal{C})$ fails to return a type substitution
+        \end{itemize}
+        All structures of $\mathcal{C}$ have been covered, hence $unify(\mathcal{C})$
+        either produces a type substitution $\sigma$ or fails to do so, this complete
+        the induction.
     \end{proof}
+    \normalsize
 \end{frame}
 \begin{frame}
     \begin{theorem}
