@@ -44,17 +44,20 @@ structure MySampleStructure =
            the type *)
         fun start_repl () = 
             let 
-                val input_str = ""
+                val SOME input_str = TextIO.inputLine TextIO.stdIn
                 val parsed_term = Parser.parse input_str
             in
-                case parsed_term of
+                (print 
+                    (case parsed_term of
                         NONE => "The grammar cannot generate the phrase {" ^ 
                                     input_str ^ "}"
                     |   SOME term => handle_term 
                                         Ctx.emptycontext 
                                         TI.uvargen 
                                         TI.emptyconstr 
-                                        term
+                                        term);
+                print "\n\n";
+                start_repl ())
             end
 
         fun describe str= 
