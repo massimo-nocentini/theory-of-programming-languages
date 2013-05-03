@@ -70,4 +70,20 @@ structure MySampleStructure =
                             TI.emptyconstr 
                             parsed_term)
             end
+
+(*        val hard_to_type_check = 
+            let val f0 = fn x => (x,x) in
+                let val f1 = fn y => f0 (f0 y) in
+                    let val f2 = fn y => f1 (f1 y) in
+                        let val f3 = fn y => f2 (f2 y) in
+                            let val f4 = fn y => f3 (f3 y) in
+                                let val f5 = fn y => f4 (f4 y) in
+                                    f5 (fn z => z)
+                                end
+                            end
+                        end
+                    end
+                end
+            end*)
+                                           
     end
