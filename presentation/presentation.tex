@@ -538,15 +538,29 @@
         {   {
                 \onslide<3->{ \displaystyle {   {
                     \onslide<4->{\displaystyle {   {
-                    \onslide<5->{3}}
+                    \onslide<5->{                    
+                        \displaystyle 
+                        { 
+                            {{\onslide<6->{3}}\over{                        
+                            \Gamma, x:X, z:Z\vdash        
+                                (x \, z):T_1 \,|_{\mathcal{X}_1}\, 
+                                    \mathcal{C}_1}}
+                        } \quad
+                        { 
+                            {{\onslide<6->{3}}\over{                        
+                            \Gamma, y:Y, z:Z\vdash        
+                                (y \, z):T_2 \,|_{\mathcal{X}_2}\, 
+                                    \mathcal{C}_2}}
+                        }
+                    }}
                 \over{\Gamma, x:X, y:Y, z:Z\vdash 
-                    ((x\, z)\, (y \, z))}}}}
+                    (x\, z)\, (y \, z):S\,|_{\mathcal{X}}\, \mathcal{C}}}}}
                 \over{\Gamma, x:X, y:Y\vdash \lambda z:Z.
-                    ((x\, z)\, (y \, z))}}}}
+                    ((x\, z)\, (y \, z)):S\,|_{\mathcal{X}}\, \mathcal{C}}}}}
             \over{\Gamma, x:X \vdash  \lambda y:Y.\lambda z:Z.
-                ((x\, z)\, (y \, z))}}} }
+                ((x\, z)\, (y \, z)):S\,|_{\mathcal{X}}\, \mathcal{C}}}} }
     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
-        ((x\, z)\, (y \, z))}}
+        ((x\, z)\, (y \, z)):S\,|_{\mathcal{X}}\, \mathcal{C}}}
 \end{equation*} 
 }
 
