@@ -854,15 +854,14 @@
                     
                     \item if $\{T_1 \triangleq T_2\} \cup \mathcal{C}
                         ^{\prime}$ has a different structure 
-                        from the above ones, 
-                        $unify(\{T_1 \triangleq T_2\} \cup \mathcal{C}
-                        ^{\prime})$ fails to return a type substitution,
-                        hence the theorem is vacaously true by
-                        ``ex falso quod libet''
+                        from the above ones, it can only left two cases
+                        such that $\not \exists \rho: \rho \Join \mathcal{C}$: 
+                        $T_1$ is a concrete type and $T_2$ is an arrow 
+                        type (really ``incompossible''), or let $X\in\mathcal{A}$
+                        in $T_1=X$ and $X$ appears in $T_2$ (by absurd:  
+                        assume $\rho X = \rho T_2$, but $\rho T_2$ is strictly
+                        larger that $\rho X$ by choice of $T_2$).
         \end{itemize}
-        All structures of $\mathcal{C}$ have been covered, hence 
-        $unify(\mathcal{C})=\sigma \rightarrow \sigma \Join \mathcal{C}$,
-        this complete the induction.
     \end{proof}
     \normalsize
 \end{frame}
