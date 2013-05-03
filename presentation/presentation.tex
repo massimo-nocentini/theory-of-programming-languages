@@ -790,8 +790,81 @@
         $\rho \Join \mathcal{C} \rightarrow unify(\mathcal{C}) = \sigma \wedge 
             \sigma \sqsubseteq \rho$
     \end{theorem}
-    \begin{proof}
+    \footnotesize
+    \begin{proof}[Proof. By structural induction on $\mathcal{C}$]
+    \textbf{Base} $\mathcal{C} = \emptyset$, 
+        Get any $\rho$ such that $\rho \Join \emptyset$:
+        $unify(\emptyset) = [\,]$ applies, since 
+        $\forall\gamma: \gamma = \gamma \circ [\,]$, 
+        $[\,] \sqsubseteq \rho$ holds as required\\
+    \textbf{Induction HP} assume the theorem holds for a generic
+        $\mathcal{C}^{\prime}$ and prove for a new set 
+        $\{T_1 \triangleq T_2\} \cup \mathcal{C}^{\prime}$
+        where $T_1,T_2 \in T$ (possibly containing type variables) \\
+    \textbf{Induction Step} proceed by pattern matching on the 
+        structure of the new set $\{T_1 \triangleq T_2\} \cup 
+        \mathcal{C}^{\prime}$: 
+        \begin{itemize}
+            \item $unify(\{T_1 \triangleq T_2\} \cup 
+                \mathcal{C}^{\prime})
+                \quad \text{if } T_1 = T_2$ does what 
+                $unify(\mathcal{C}^{\prime})$ does: let $\rho \Join
+                \{T_1 \triangleq T_2\} \cup 
+                \mathcal{C}^{\prime}$, hence $\rho \Join
+                \mathcal{C}^{\prime}$. By induction hp 
+                $\rho \Join \mathcal{C}^{\prime} \rightarrow
+                unify(\mathcal{C}^{\prime}) = \sigma \wedge
+                \sigma \sqsubseteq \rho$, but the added equation
+                is already an identity, hence $\sigma \Join 
+                \{T_1 \triangleq T_2\} \cup \mathcal{C}^{\prime}$ 
+                if $ T_1 = T_2$ and $\sigma \sqsubseteq \rho$
+
+            \item Let $X \in \mathcal{A}$: $unify(\{X \triangleq T_1\}
+            \cup \mathcal{C}^{\prime})$
+            compose what $unify([ X \mapsto T_1]\mathcal{C}^{\prime})$ 
+            returns with $[X \mapsto T_1]$: let $\rho \Join
+                \{X \triangleq T_1\} \cup 
+                \mathcal{C}^{\prime}$, since $\rho X = \rho T_1$ 
+                and $\rho \Join \mathcal{C}^{\prime}$, follows that
+                $\rho \Join [X \mapsto T_1]\mathcal{C}^{\prime}$. 
+                By induction hp, 
+            $unify([ X \mapsto T_1]\mathcal{C}^{\prime}) = \sigma
+            \wedge \sigma \sqsubseteq \rho$ and by def of 
+            $\sqsubseteq$, holds $\rho = \gamma \circ \sigma$ for a
+            $\gamma$. By rule application, $unify(\{X \triangleq T_1\}
+            \cup \mathcal{C}^{\prime}) = \sigma \circ [X\mapsto T_1]$,
+            so remain to prove $\sigma \circ [X\mapsto T_1] 
+            \sqsubseteq \rho$, by def of 
+            $\sqsubseteq$, $\rho = \gamma \circ (\sigma \circ
+            [X\mapsto T_1])$ for a $\gamma$.
+            Consider any $Y\in \mathcal{A}$: if $Y\not = X$ then 
+            $(\gamma \circ (\sigma \circ [X\mapsto T_1]))Y = 
+            (\gamma \circ \sigma) Y$ which holds by induction hp.
+            Otherwise, if $Y=X$ then $(\gamma \circ (\sigma 
+            \circ [X\mapsto T_1]))Y = (\gamma \circ \sigma)T_1$
+            which holds because $\rho \Join {X\triangleq T_1}$
+            \item observe that $\rho \Join \{T_1 \rightarrow T_2 
+                \triangleq S_1\rightarrow S_2 \} \cup 
+                \mathcal{C}^{\prime})$ if and only if 
+                $\rho \Join \{T_1 \triangleq S_1,
+                    T_2 \triangleq S_2\}\cup\mathcal{C}^{\prime}$:
+                    hence we apply the argument recursively on 
+                    $\{T_1 \triangleq S_1,
+                    T_2 \triangleq S_2\}\cup\mathcal{C}^{\prime}$
+                    
+                    \item if $\{T_1 \triangleq T_2\} \cup \mathcal{C}
+                        ^{\prime}$ has a different structure 
+                        from the above ones, 
+                        $unify(\{T_1 \triangleq T_2\} \cup \mathcal{C}
+                        ^{\prime})$ fails to return a type substitution,
+                        hence the theorem is vacaously true by
+                        ``ex falso quod libet''
+        \end{itemize}
+        All structures of $\mathcal{C}$ have been covered, hence 
+        $unify(\mathcal{C})=\sigma \rightarrow \sigma \Join \mathcal{C}$,
+        this complete the induction.
     \end{proof}
+    \normalsize
 \end{frame}
 
 \subsection{Definition of principal solution for $(\Gamma, t,S, \mathcal{C})$}
