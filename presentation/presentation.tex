@@ -42,6 +42,9 @@
 \usepackage{wasysym}
 \usepackage{times}
 \usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{cancel}
+\newcommand\xxcancel[1]{\xcancel{#1}\vphantom{#1}}
 % Or whatever. Note that the encoding and the font should match. If T1
 % does not look nice, try deleting the line with the fontenc.
 % \lstset{
@@ -379,7 +382,7 @@
                 sustitution $\sigma$ such that the term 
                 $\sigma t$ is typeable under assumption $\sigma \Gamma$?}\\~\\
             If this is the case, suppose $\not \exists T_{1}.
-            \Gamma \not \vdash t:T_1$, using 
+            \Gamma \vdash t:T_1$, using 
             type substitution $\sigma$ we're able to give a type $T_{2}$ 
             to $\sigma t$, formally $\sigma \Gamma \vdash \sigma t: T_{2}$
             \pause
@@ -478,8 +481,9 @@
     The following questions drive what follow:
     \begin{itemize}
         \item given a pair $(\Gamma, t)$ there always exist a constraint set?
-        \item suppose a constraint exists, is it unique?
-        \item assume the existence is enough, how is its construction defined?
+        \item suppose a constraint set exists, is it unique?
+        \item assume the existence is enough, how is its construction defined
+                for all cases?
         \item how can we use the constraint set to build a solution for $(\Gamma, t)$?
     \end{itemize}
 \end{frame}
@@ -529,6 +533,46 @@
 
 \begin{frame}
     \begin{example}
+        \begin{overprint}
+            \onslide<1>
+            \begin{tabular}{c}
+                {}\\
+                {}\\
+                $\displaystyle {{}\over{\Gamma \vdash \lambda x:X. 
+                \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, z))}}$
+            \end{tabular}
+            \onslide<2>
+                \begin{tabular}{c}
+                {}\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash 
+                    \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z))}}$
+                \end{tabular}
+            \onslide<3>
+                \begin{tabular}{c}
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash 
+                    \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z))}}$
+                \end{tabular}
+            \onslide<4>
+                \begin{tabular}{c}
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, z)}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash 
+                    \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z))}}$
+                \end{tabular}
+        \end{overprint}
     \end{example}
 \end{frame}
 
