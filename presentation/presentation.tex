@@ -44,7 +44,6 @@
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{cancel}
-\newcommand\xxcancel[1]{\xcancel{#1}\vphantom{#1}}
 % Or whatever. Note that the encoding and the font should match. If T1
 % does not look nice, try deleting the line with the fontenc.
 % \lstset{
@@ -54,7 +53,7 @@
 %   morekeywords={encoding,
 %     xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute}
 % }
-
+\setbeamersize{text margin left=.5cm,text margin right=.5cm} 
 \title[Type reconstruction] {Type reconstruction}
 
 \subtitle{constraint-based, unification and a little interpreter}
@@ -574,7 +573,10 @@
         ((x\, z)\, (y \, z)):S\,|_{\mathcal{X}}\, \mathcal{C}}}
 \end{equation*} \normalsize
 }
-
+\begin{frame}
+\makebox[\linewidth]{\rule{12cm}{3cm}hello}
+%\makebox[\linewidth]{\parbox{12cm}{hello}}
+\end{frame}
 \begin{frame}
 \footnotesize
     \begin{center}
@@ -634,7 +636,7 @@
                 \end{tabular}
             \onslide<5>
                 \begin{tabular}{c}
-                    \begin{tabular}{lr}
+                    \begin{tabular}{cc}
                         \begin{tabular}{c}
                             $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
                             \vdash
@@ -674,9 +676,9 @@
                 \end{tabular}
             \onslide<6>
                 \begin{tabular}{c}
-                    \begin{tabular}{lr}
+                    \begin{tabular}{cc}
                         \begin{tabular}{c}
-                            \begin{tabular}{lr}
+                            \begin{tabular}{cc}
                                 \begin{tabular}{c}
                                     $\displaystyle {{{}\over{\Gamma, 
                                     x:X \vdash x :S_3\,|_{\mathcal{X}_3}\, 
@@ -736,9 +738,9 @@
                 \end{tabular}
             \onslide<7>
                 \begin{tabular}{c}
-                    \begin{tabular}{lr}
+                    \begin{tabular}{cc}
                         \begin{tabular}{c}
-                            \begin{tabular}{lr}
+                            \begin{tabular}{cc}
                                 \begin{tabular}{c}
                                     $\displaystyle {{{}\over{x:X \in 
                                     \Gamma, x:X}}}$\\
@@ -793,6 +795,217 @@
                     \cup\{A,B\}}\, 
                 \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
                 A, X = S_4 \rightarrow B\}}} $
+                \end{tabular}
+            \onslide<8>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            \begin{tabular}{cc}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{x:X \in 
+                                    \Gamma, x:X}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    x:X \vdash x :X\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{z:Z \in 
+                                    \Gamma, z:Z}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{{\{B\}}}\, \{X = Z \rightarrow 
+                            B\}}}} $
+                            \end{tabular}&
+                            %put in the following tabular the previous 
+                            %changes about nested tabular
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, z):A\,|_{\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                \mathcal{C}_{2}\cup\{B=S_2\rightarrow A, X = Z 
+                \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_2
+                        \cup\{A,B\}}\, 
+                    \mathcal{C}_{2}\cup\{B=S_2\rightarrow A, X = Z 
+                    \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow 
+                    A\,|_{\mathcal{X}_2\cup\{A,B\}}\, 
+                    \mathcal{C}_{2}\cup\{B=S_2\rightarrow A, X = Z 
+                    \rightarrow B\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                    \mathcal{C}_{2}\cup\{B=S_2\rightarrow A, X = Z 
+                    \rightarrow B\}}} $
+                \end{tabular}
+            \onslide<9>
+                \begin{tabular}{c}
+                    \begin{tabular}{rl}
+                        \begin{tabular}{c}
+%                            \begin{tabular}{rl}
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{x:X \in 
+%                                    \Gamma, x:X}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    x:X \vdash x :X\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular} &
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{z:Z \in 
+%                                    \Gamma, z:Z}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular}
+%                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{{\{B\}}}\, \{X = Z \rightarrow 
+                            B\}}}} $
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            \begin{tabular}{rl}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    y:Y \vdash y 
+                                    :S_5\,|_{\mathcal{X}_5}\, 
+                                    \mathcal{C}_5}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z 
+                                    :S_6\,|_{\mathcal{X}_6}\, 
+                                    \mathcal{C}_6}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, 
+                            z:C\,|_{\mathcal{X}_5\cup\mathcal{X}_6\cup
+                            \{C\}}\, 
+                            \mathcal{C}_5\cup\mathcal{C}_6\cup\{
+                            S_5 = S_6 \rightarrow C\}}}} $                      
+                    \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, 
+                z):A\,|_{\mathcal{X}_5\cup\mathcal{X}_6
+                    \cup\{A,B,C\}}\, 
+                \mathcal{C}_5\cup\mathcal{C}_6\cup\{B=C\rightarrow A, 
+                X = Z \rightarrow B, S_5 = S_6 \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_5\cup\mathcal{X}_6
+                        \cup\{A,B,C\}}\, 
+                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B=C\rightarrow 
+                    A, X = Z \rightarrow B, S_5 = S_6 \rightarrow 
+                    C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow 
+                    A\,|_{\mathcal{X}_5\cup\mathcal{X}_6\cup\{A,B,C\}}\, 
+                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B=C\rightarrow 
+                    A, X = Z \rightarrow B, S_5 = S_6 \rightarrow 
+                    C\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\mathcal{X}_5\cup\mathcal{X}_6
+                    \cup\{A,B,C\}}\, 
+                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B=C\rightarrow 
+                    A, X = Z \rightarrow B, S_5 = S_6 \rightarrow 
+                    C\}}} $
+                \end{tabular}
+            \onslide<10>
+                \begin{tabular}{c}
+                    \begin{tabular}{rl}
+                        \begin{tabular}{c}
+%                            \begin{tabular}{rl}
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{x:X \in 
+%                                    \Gamma, x:X}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    x:X \vdash x :X\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular} &
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{z:Z \in 
+%                                    \Gamma, z:Z}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular}
+%                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{{\{B\}}}\, \{X = Z \rightarrow 
+                            B\}}}} $
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            \begin{tabular}{rl}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{y:Y \in 
+                                    \Gamma, y:Y}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    y:Y \vdash y :Y\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                  %  $\displaystyle {{{}\over{z:Z \in 
+                                  %  \Gamma, z:Z}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z 
+                                    :S_6\,|_{\mathcal{X}_6}\, 
+                                    \mathcal{C}_6}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:C\,|_{\mathcal{X}_6\cup
+                            \{C\}}\, \mathcal{C}_6\cup\{
+                            Y = S_6 \rightarrow C\}}}} $                      
+                    \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, z):A\,|_{\mathcal{X}_6
+                    \cup\{A,B,C\}}\, \mathcal{C}_6\cup\{B=C\rightarrow 
+                A, X = Z \rightarrow B, Y = S_6 \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_6
+                        \cup\{A,B,C\}}\, 
+                    \mathcal{C}_6\cup\{B=C\rightarrow A, X = Z 
+                    \rightarrow B, Y = S_6 \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow 
+                    A\,|_{\mathcal{X}_6\cup\{A,B,C\}}\, 
+                    \mathcal{C}_6\cup\{B=C\rightarrow A, X = Z 
+                    \rightarrow B, Y = S_6 \rightarrow C\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\mathcal{X}_6
+                    \cup\{A,B,C\}}\, \mathcal{C}_6\cup\{B=C\rightarrow 
+                    A, X = Z \rightarrow B, Y = S_6 \rightarrow C\}}} 
+                    $
                 \end{tabular}
         \end{overprint}
     \end{center}
