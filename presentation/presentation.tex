@@ -821,6 +821,12 @@
                 is a type substitution $\sigma$ such that $\sigma \Join \mathcal{C}$
                 and $\forall \rho \Join \mathcal{C}: \sigma \sqsubseteq \rho$
     \end{itemize}
+    \begin{example}
+        Let $\rho = \{S \mapsto Nat \rightarrow Nat, Z \mapsto Nat\}$ 
+        and $\sigma = \{S \mapsto Z \rightarrow Z\}$. We have $\sigma 
+        \sqsubseteq \rho$ because $\exists \gamma = \{Z \mapsto Nat\}$ 
+        such that $\rho = \gamma \circ \sigma$
+    \end{example}
 \end{frame}
 
 \subsection{Properties}
