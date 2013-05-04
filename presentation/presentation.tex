@@ -688,8 +688,50 @@
 \end{frame}
 
 \begin{frame}
-    \begin{proof}[Proof. Soundness of Constraint typing]
+    \footnotesize
+    \begin{proof}[Proof. Soundness of Constraint typing. We show that: 
+        $\Omega \supseteq \Theta$]
+        By hypothesis, let $\Gamma \vdash t : S \, |_{\mathcal{X}} \,
+        \mathcal{C}$ ($\mathcal{X}$ is useless in this proof) and 
+        $(\sigma, T_1)$ a solution for $(\Gamma, t, S, \mathcal{C})$.  
+        Proceed by induction on the last constraint type relation rule 
+        applied:
+        \begin{description}
+            \item[CT-VAR] ${{x:S\in\Gamma}\over{\Gamma \vdash x:S
+                \,|\,\emptyset}}$ is the applied
+                ruled .  By typing rule \emph{T-VAR} follows $x:S\in 
+                \Gamma \rightarrow \Gamma \vdash x:S$. Since typing is 
+                preserved under type substitution, $\sigma\Gamma 
+                \vdash \sigma x:\sigma S$.  But $(\sigma, T_1)$ is 
+                solution for $(\Gamma, x, S, \emptyset)$ by theorem 
+                hp, hence $\sigma S = T_1$ so
+                $\sigma \Gamma \vdash \sigma x:T_1$, which is like to 
+                say $(\sigma, T_1)\in\Omega$ as required.
+            \item[CT-ABS] ${{\Gamma, x:S_1\vdash t_2: S_2 
+                \,|\,\mathcal{C}}\over{\Gamma \vdash x:S_1.t_2:S_1 
+                \rightarrow S_2 \,|\,\mathcal{C}}}$ is the applied 
+                rule.  By premises, let $(\sigma, \sigma S_2)$ be 
+                solution for $(x:S_1 \cup \Gamma, t_2, S_2, 
+                \mathcal{C})$ so we apply induction hp, having 
+                $(\sigma, \sigma S_2) \in \Omega$, in other
+                words $(\sigma, \sigma S_2)$ is solution for $(x:S_1 
+                \cup \Gamma, t_2)$, so we write $\sigma\Gamma,x:\sigma 
+                S_1 \vdash \sigma t_2 : \sigma S_2$ which is the 
+                premise of \emph{T-ABS} rule, hence $\sigma \Gamma 
+                \vdash \lambda x:\sigma S_1.\sigma t_2: \sigma S_1 
+                \rightarrow \sigma S_2$
+                . But $(\sigma, T_1)$ is solution for
+                $(\Gamma, \lambda x:S_1.t_2, S_1\rightarrow S_2, 
+                \mathcal{C})$ by theorem hp, hence $\sigma \Join 
+                \mathcal{C} \wedge \sigma (S_1 \rightarrow S_2) = 
+                T_1$. By def of substitution application $\sigma (S_1 
+                \rightarrow S_2) = \sigma S_1 \rightarrow S_2$, hence
+                we can rewrite $\sigma \Gamma \vdash \lambda x:\sigma 
+                S_1.\sigma t_2:T_1$ which is like to say $(\sigma, 
+                T_1) \in \Omega$ as required.  
+                \end{description}
     \end{proof}
+    \normalsize
 \end{frame}
 
 \begin{frame}
