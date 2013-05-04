@@ -734,6 +734,66 @@
                 \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
                 A, S_3 = S_4 \rightarrow B\}}} $
                 \end{tabular}
+            \onslide<7>
+                \begin{tabular}{c}
+                    \begin{tabular}{lr}
+                        \begin{tabular}{c}
+                            \begin{tabular}{lr}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{x:X \in 
+                                    \Gamma, x:X}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    x:X \vdash x :X\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z 
+                                    :S_4\,|_{\mathcal{X}_4}\, 
+                                    \mathcal{C}_4}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{\mathcal{X}_4
+                            \cup{\{B\}}}\, \mathcal{C}_4\cup\{X = S_4 
+                            \rightarrow B\}}}} $
+                            \end{tabular}&
+                            %put in the following tabular the previous 
+                            %changes about nested tabular
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, 
+                z):A\,|_{\mathcal{X}_4\cup\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
+                A, X = S_4 \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_4\cup\mathcal{X}_2
+                        \cup\{A,B\}}\, 
+                    \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
+                    A, X = S_4 \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow A\,|_{\mathcal{X}_4
+                    \cup\mathcal{X}_2\cup\{A,B\}}\, 
+                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
+                A, X = S_4 \rightarrow B\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\mathcal{X}_4\cup\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
+                A, X = S_4 \rightarrow B\}}} $
+                \end{tabular}
         \end{overprint}
     \end{center}
     \normalsize
