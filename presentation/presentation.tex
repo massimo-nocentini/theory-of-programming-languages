@@ -532,24 +532,35 @@
 \end{frame}
 
 \frame{
-\frametitle{Colors} 
-\begin{equation*} 
-    {{\onslide<2->{\displaystyle
+\frametitle{Colors}
+\footnotesize
+\begin{equation*} {{\onslide<2->{\displaystyle
         {   {
                 \onslide<3->{ \displaystyle {   {
                     \onslide<4->{\displaystyle {   {
-                    \onslide<5->{                    
-                        \displaystyle 
-                        { 
-                            {{\onslide<6->{3}}\over{                        
-                            \Gamma, x:X, z:Z\vdash        
-                                (x \, z):T_1 \,|_{\mathcal{X}_1}\, 
-                                    \mathcal{C}_1}}
+                    \onslide<5->{                    \displaystyle { 
+                        {{\onslide<6->{\displaystyle
+                                    { {{\onslide<7->{x:S_3 \in \Gamma 
+                                        , x : S_3}}\over{                        
+                                        \Gamma, x:X\vdash x:S_3 
+                                        \,|_{\mathcal{X}_3}\, 
+                                        \mathcal{C}_3}}
+                                    }
+                                \quad
+                                    { {{\onslide<7->{3}}\over{                        
+                                        \Gamma, y:Y, z:Z\vdash        
+                                        (y \, z):S_2 
+                                        \,|_{\mathcal{X}_2}\, 
+                                        \mathcal{C}_2}}
+                                    }
+                                 }}\over{                        
+                        \Gamma, x:X, z:Z\vdash        (x \, z):S_1 
+                        \,|_{\mathcal{X}_1}\, \mathcal{C}_1}}
                         } \quad
                         { 
                             {{\onslide<6->{3}}\over{                        
                             \Gamma, y:Y, z:Z\vdash        
-                                (y \, z):T_2 \,|_{\mathcal{X}_2}\, 
+                                (y \, z):S_2 \,|_{\mathcal{X}_2}\, 
                                     \mathcal{C}_2}}
                         }
                     }}
@@ -561,52 +572,109 @@
                 ((x\, z)\, (y \, z)):S\,|_{\mathcal{X}}\, \mathcal{C}}}} }
     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
         ((x\, z)\, (y \, z)):S\,|_{\mathcal{X}}\, \mathcal{C}}}
-\end{equation*} 
+\end{equation*} \normalsize
 }
 
 \begin{frame}
-    \begin{example}
+\footnotesize
+    \begin{center}
         \begin{overprint}
             \onslide<1>
             \begin{tabular}{c}
                 {}\\
                 {}\\
-                $\displaystyle {{}\over{\Gamma \vdash \lambda x:X. 
-                \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, z))}}$
+                $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, 
+                z)):S_1\,|_{\mathcal{X}}\, \mathcal{C}}}$
             \end{tabular}
             \onslide<2>
                 \begin{tabular}{c}
                 {}\\
-                $\displaystyle {{{}\over{\Gamma, x:X \vdash 
-                    \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, 
+                    z)):S_2\,|_{\mathcal{X}}\, \mathcal{C}}}} $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
-                    ((x\, z)\, (y \, z))}}$
+                    ((x\, z)\, (y \, z)):X \rightarrow S_2
+                \,|_{\mathcal{X}}\, \mathcal{C}}}$
                 \end{tabular}
             \onslide<3>
                 \begin{tabular}{c}
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
-                    \lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
-                $\displaystyle {{{}\over{\Gamma, x:X \vdash 
-                    \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
+                    \lambda z:Z.  ((x\, z)\, (y \, 
+                    z)):S_3\,|_{\mathcal{X}}\, \mathcal{C}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow S_3\,|_{\mathcal{X}}\, \mathcal{C}}}} 
+                    $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
-                    ((x\, z)\, (y \, z))}}$
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                S_3\,|_{\mathcal{X}}\, \mathcal{C}}}$
                 \end{tabular}
             \onslide<4>
                 \begin{tabular}{c}
+                    $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z 
+                    \vdash
+                    (x\, z)\, (y \, z):S_4\,|_{\mathcal{X}}\, 
+                    \mathcal{C}}}} $\\
+                    $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                        \lambda z:Z.  ((x\, z)\, (y \, 
+                        z)):Z\rightarrow S_4\,|_{\mathcal{X}}\, 
+                        \mathcal{C}}}} $\\
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                        \rightarrow Z \rightarrow 
+                        S_4\,|_{\mathcal{X}}\, \mathcal{C}}}} $\\
+                    $\displaystyle {{}
+                        \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                        ((x\, z)\, (y \, z)):X \rightarrow Y 
+                    \rightarrow Z\rightarrow S_4\,|_{\mathcal{X}}\, 
+                    \mathcal{C}}}$
+                \end{tabular}
+            \onslide<5>
+                \begin{tabular}{c}
+                    \begin{tabular}{lr}
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:S_1\,|_{\mathcal{X}_1}\, 
+                            \mathcal{C}_1}}} $                        
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
-                (x\, z)\, (y \, z)}}} $\\
+                (x\, z)\, (y \, 
+                z):A\,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup\{A\}}\, 
+                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1=S_2\rightarrow 
+                A\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
-                    \lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
-                $\displaystyle {{{}\over{\Gamma, x:X \vdash 
-                    \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, z))}}} $\\
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup\{A\}}\, 
+                    \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1=S_2\rightarrow 
+                    A\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow A\,|_{\mathcal{X}_1
+                    \cup\mathcal{X}_2\cup\{A\}}\, 
+                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1=S_2\rightarrow 
+                A\}}}}  $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
-                    ((x\, z)\, (y \, z))}}$
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow 
+                A\,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup\{A\}}\, 
+                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1=S_2\rightarrow 
+                A\}}} $
                 \end{tabular}
         \end{overprint}
-    \end{example}
+    \end{center}
+    \normalsize
 \end{frame}
 
 \subsection{Definition of solution for $(\Gamma, t, S, \mathcal{C})$}
