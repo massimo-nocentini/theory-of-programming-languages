@@ -1303,7 +1303,8 @@
                 \,|\,\emptyset}}$ is the applied
                 rule. By theorem hp, $(\sigma, T_1)$ is solution for
                 $(\Gamma, x)$, that is $\sigma
-                \Gamma \vdash x : T_1$ ($\sigma x = x$). By inversion lemma
+                \Gamma \vdash x : T_1$ ($\sigma x = x$ since $x$ is a
+                var name). By inversion lemma
                 holds $x:T_1 \in \sigma\Gamma$. If it was possible to
                 apply the rule, then $x:S\in\Gamma$, hence $x:\sigma
                 S\in \sigma \Gamma$. By
@@ -1312,30 +1313,29 @@
                 $(\Gamma,x,S,\emptyset)$ which is like to say
                 $(\sigma, T_1)\in\Theta$ as required. 
             \item[CT-ABS] ${{\Gamma, x:S_1\vdash t_2: S_2 
-                \,|\,\mathcal{C}}\over{\Gamma \vdash x:S_1.t_2:S_1 
-                \rightarrow S_2 \,|\,\mathcal{C}}}$ is the applied 
-                rule.  By premises, let $(\sigma, \sigma S_2)$ be 
-                solution for $(x:S_1 \cup \Gamma, t_2, S_2, 
-                \mathcal{C})$ so we apply induction hp, having 
-                $(\sigma, \sigma S_2) \in \Omega$, in other
-                words $(\sigma, \sigma S_2)$ is solution for $(x:S_1 
-                \cup \Gamma, t_2)$, so we write $\sigma\Gamma,x:\sigma 
-                S_1 \vdash \sigma t_2 : \sigma S_2$ which is the 
-                premise of \emph{T-ABS} rule, hence $\sigma \Gamma 
-                \vdash \lambda x:\sigma S_1.\sigma t_2: \sigma S_1 
-                \rightarrow \sigma S_2$
-                . But $(\sigma, T_1)$ is solution for
-                $(\Gamma, \lambda x:S_1.t_2, S_1\rightarrow S_2, 
-                \mathcal{C})$ by theorem hp, hence $\sigma \Join 
-                \mathcal{C} \wedge \sigma (S_1 \rightarrow S_2) = 
-                T_1$. By def of substitution application $\sigma (S_1 
-                \rightarrow \sigma S_2) = \sigma S_1 \rightarrow S_2$, 
-                hence
-                we can rewrite $\sigma \Gamma \vdash \lambda x:\sigma 
-                S_1.\sigma t_2:T_1$, so $(\sigma, T_1)$ is solution 
-                for $(\Gamma, \lambda x:S_1.t_2)$  which is like to 
-                say $(\sigma, T_1) \in \Omega$ as required.  
-
+                \,|_{\mathcal{X}}\,\mathcal{C}}\over{
+                \Gamma \vdash x:S_1.t_2:S_1 
+                \rightarrow S_2 \,|_{\mathcal{X}}\,
+                \mathcal{C}}}$ is the applied 
+                rule. By theorem hp, $(\sigma, T_1)$ is solution for
+                $(\Gamma, \lambda x:S_1.t_2)$, that is $\sigma \Gamma
+                \vdash \lambda x:\sigma S_1.\sigma t_2 : T_1$. By
+                inversion lemma holds $T_1 = \sigma S_1\rightarrow
+                S_3$ for some $S_3$ such that $\sigma \Gamma, x:\sigma
+                S_1\vdash \sigma t_2 : S_3$, so $(\sigma, S_3)$ is
+                solution for $(\Gamma \cup x:S_1, t_2)$. This allow us
+                to apply induction hp: let $(\rho, S_3)$ be a solution
+                for $(\Gamma \cup x:S_1, t_2, S_2, \mathcal{C})$ such
+                that $\rho \setminus \mathcal{X} = \sigma$. Observe
+                that $\mathcal{X}\cap FV(S_1)=\emptyset$ by def of
+                constraint rules, hence $\rho
+                S_1 = \sigma S_1$. So $\rho (S_1 \rightarrow S_2) =
+                \rho S_1 \rightarrow \rho S_2 = \sigma S_1 \rightarrow
+                \rho S_2 = \sigma S_1 \rightarrow S_3 = T_1$. This
+                imply that $(\rho, T_1)$ is solution for $(\Gamma,
+                \lambda x:S_1.t_2, S_1\rightarrow S_2,
+                \mathcal{C})$ which is like to say
+                $(\rho, T_1)\in\Theta$ as required.
             \item[CT-APP] ${{
                         \begin{array}{rl}
                           \Gamma \vdash t_{1}:S_{1} \; \textbar \;
