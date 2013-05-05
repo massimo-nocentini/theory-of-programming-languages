@@ -1422,7 +1422,7 @@
                     X)$ as required. This prove that $(\rho, T_1)$ is solution
                     
                     \item   $\rho\setminus(\mathcal{X}_1\cup\mathcal{X}_2
-                        \cup\{X\} = \sigma$ by first rule in def of
+                        \cup\{X\}) = \sigma$ by first rule in def of
                         $\rho$
                 \end{itemize}
                 
@@ -1480,6 +1480,72 @@
         \sqsubseteq \rho$ because $\exists \gamma = \{Z \mapsto Nat\}$ 
         such that $\rho = \gamma \circ \sigma$
     \end{example}
+\end{frame}
+
+\begin{frame}
+    We return to the extended example: we built the constraint set
+    $\mathcal{C} = \{B\triangleq C\rightarrow A, X 
+                        \triangleq  Z \rightarrow B, Y \triangleq  Z
+                        \rightarrow C\}$, now we apply the unification
+                        in order to build a type substitution $\sigma$
+                        (hoping such that $\sigma \Join \mathcal{C}$)
+    \begin{overprint}
+        \onslide<1>
+    \begin{displaymath}
+             unify(\{B\triangleq C\rightarrow A,X 
+                                \triangleq  Z \rightarrow B, Y
+                                \triangleq  Z \rightarrow C\}) \\
+    \end{displaymath}
+        \onslide<2>
+    \begin{displaymath}
+             unify(\{B\triangleq C\rightarrow A\} \cup \{X 
+                                \triangleq  Z \rightarrow B, Y
+                                \triangleq  Z \rightarrow C\}) \\
+    \end{displaymath}
+        \onslide<3>
+    \begin{displaymath}
+             unify([B\mapsto C\rightarrow A]\{X \triangleq  Z \rightarrow B, Y
+                                \triangleq  Z \rightarrow
+                                C\})\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<4>
+    \begin{displaymath}
+             unify(\{ X \triangleq  Z \rightarrow C\rightarrow A, Y
+                                \triangleq  Z \rightarrow
+                                C\})\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<5>
+    \begin{displaymath}
+             unify(\{ X \triangleq  Z \rightarrow C\rightarrow
+                A\}\cup\{ Y \triangleq  Z \rightarrow
+                                C\})\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<6>
+    \begin{displaymath}
+             unify([ X \triangleq  Z \rightarrow C\rightarrow
+                A]\{ Y \triangleq  Z \rightarrow
+                    C\})\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                A]\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<7>
+    \begin{displaymath}
+             unify(\{ Y \triangleq  Z \rightarrow
+                    C\})\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                A]\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<8>
+    \begin{displaymath}
+             unify(\emptyset)\circ[ Y \triangleq  Z \rightarrow
+                    C]\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                A]\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<9>
+    \begin{displaymath}
+             []\circ[ Y \triangleq  Z \rightarrow
+                    C]\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                A]\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+    \end{overprint}
 \end{frame}
 
 \subsection{Properties}
@@ -1709,7 +1775,78 @@
     \end{theorem}
 \end{frame}
 
-\section{Limitations, worst-cases and complexity}
+\begin{frame}
+    We finish our extended example to show a principal solution. Using
+    unification algorithm we found the type substitution:
+    \begin{displaymath}
+         \sigma = []\circ[ Y \triangleq  Z \rightarrow
+                C]\circ[ X \triangleq  Z \rightarrow C\rightarrow
+            A]\circ[B\mapsto C\rightarrow A]
+    \end{displaymath}
+    And, using the deduction for constraint typing relation, we found
+    that:
+    \begin{displaymath}
+        \lambda x:X. \lambda y:Y.
+            \lambda z:Z.  ((x\, z)\, (y \, z)):X \rightarrow
+                Y \rightarrow Z\rightarrow A
+    \end{displaymath}
+    In order to find a principal solution we apply $\sigma$ to the
+    abstract type above to have a \emph{concrete} type for the term
+    (possibly containing free variables, heart of parametric polymorphism,
+    remember?):
+    \begin{overprint}
+        \onslide<1>
+        \begin{displaymath}
+            \sigma (X \rightarrow Y \rightarrow Z\rightarrow A)
+        \end{displaymath}
+        \onslide<2>
+        \begin{displaymath}
+            \sigma X \rightarrow \sigma(Y \rightarrow Z\rightarrow A)
+        \end{displaymath}
+        \onslide<3>
+        \begin{displaymath}
+            \sigma X \rightarrow \sigma Y \rightarrow \sigma (Z\rightarrow A)
+        \end{displaymath}
+        \onslide<4>
+        \begin{displaymath}
+            \sigma X \rightarrow \sigma Y \rightarrow \sigma
+            Z\rightarrow \sigma A
+        \end{displaymath}
+        \onslide<5>
+        \begin{displaymath}
+            (Z\rightarrow C\rightarrow A) \rightarrow \sigma Y 
+            \rightarrow \sigma Z\rightarrow \sigma A
+        \end{displaymath}
+        \onslide<6>
+        \begin{displaymath}
+            (Z\rightarrow C\rightarrow A) \rightarrow (Z\rightarrow C) 
+            \rightarrow \sigma Z\rightarrow \sigma A
+        \end{displaymath}
+        \onslide<7>
+        \begin{displaymath}
+            (Z\rightarrow C\rightarrow A) \rightarrow (Z\rightarrow C) 
+            \rightarrow Z\rightarrow \sigma A
+        \end{displaymath}
+        \onslide<8>
+        \begin{displaymath}
+            (Z\rightarrow C\rightarrow A) \rightarrow (Z\rightarrow C) 
+            \rightarrow Z\rightarrow  A
+        \end{displaymath}
+        Hence $(\sigma,             (Z\rightarrow C\rightarrow A)
+        \rightarrow (Z\rightarrow C) \rightarrow Z\rightarrow  A),
+        \forall A,C,Z\in T,$ is the principal solution for 
+        \begin{displaymath}    
+                (\emptyset, \lambda x:X. \lambda y:Y.
+            \lambda z:Z.  ((x\, z)\, (y \, z)), X \rightarrow
+                Y \rightarrow Z\rightarrow A, \{B\triangleq
+                C\rightarrow A, X 
+                                        \triangleq  Z \rightarrow B, Y
+                                        \triangleq  Z
+                                                                \rightarrow
+                                                                C\})
+        \end{displaymath}
+    \end{overprint}
+\end{frame}
 
 \section{Interpreter}
 

@@ -85,5 +85,6 @@ structure MySampleStructure =
                     end
                 end
             end*)
-                                           
+        val term_from_extended_example =
+            fn x => fn y => fn z => ((x z) (y z))
     end
