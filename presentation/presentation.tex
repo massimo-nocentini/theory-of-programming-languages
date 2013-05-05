@@ -1336,47 +1336,102 @@
                 \lambda x:S_1.t_2, S_1\rightarrow S_2,
                 \mathcal{C})$ which is like to say
                 $(\rho, T_1)\in\Theta$ as required.
+        \end{description}
+    \end{proof}
+    \normalsize
+\end{frame}
+
+\begin{frame}
+    \footnotesize
+    \begin{proof}[Proof. Completeness of Constraint typing: 
+        $\Omega \subseteq \Theta$]
+        By hypothesis, let $\Gamma \vdash t : S \, |_{\mathcal{X}} \,
+        \mathcal{C}$  and 
+        $(\sigma, T_1)$ a solution for $(\Gamma, t)$ such that 
+        $dom(\sigma)\cap\mathcal{X} = \emptyset$. We want to show
+        that exists a solution $(\rho, T_1)$ for $(\Gamma, t, S,
+        \mathcal{C})$ such that $\rho\setminus\mathcal{X}=\sigma$.
+        Proceed by induction on the last constraint type relation rule 
+        applied:
+        \begin{description}
             \item[CT-APP] ${{
-                        \begin{array}{rl}
-                          \Gamma \vdash t_{1}:S_{1} \; \textbar \;
-                            \mathcal{C}_1  &
-                        \Gamma \vdash  t_{2}:S_{2} \; \textbar \;
-                            \mathcal{C}_2  \\
-                         \mathcal{C}^{\prime} = \mathcal{C}_1 \cup 
-                            \mathcal{C}_2
-                            \cup & \{ S_1 \triangleq S_2 \rightarrow X 
-                        \} \end{array}}\over
-                        {\Gamma \vdash t_{1} \, t_{2} : X\;
-                    \textbar_{\mathcal{X}_1 \cup \mathcal{X}_2 \cup
-                        \{X\}} \; \mathcal{C}^{\prime} }}$ is the 
-                        applied rule. By induction hp, we have both 
-                        $(\sigma, \sigma S_1)$ is solution for 
-                        $(\Gamma, t_1)$ both $(\sigma, \sigma S_2)$ is 
-                        solution for $(\Gamma, t_2)$, in other words 
-                        $\sigma \Gamma \vdash \sigma t_1 : \sigma S_1$ 
-                        and $\sigma \Gamma \vdash \sigma t_2 : \sigma 
-                        S_2$. By theorem hp, $(\sigma,T_1)$ is 
-                        solution for $(\Gamma, t_1 t_2, X, 
-                        \mathcal{C}^{\prime})$, hence $\sigma \Join 
-                        \mathcal{C}^{\prime}$, in particular $\sigma 
-                        \Join S_1\triangleq S_2\rightarrow X$, which 
-                        does mean $\sigma S_1 = \sigma S_2 \rightarrow 
-                        \sigma X$. Substituting $\sigma S_1$ in the 
-                        previous $\sigma \Gamma \vdash \sigma t_1 : 
-                        \sigma S_1$ we have the two premises to apply 
-                        \emph{T-APP} rule, from $\sigma\Gamma \vdash
-                        \sigma t_1:\sigma S_2 \rightarrow \sigma X$ 
-                        and $\sigma \Gamma \vdash \sigma t_2 :\sigma 
-                        S_2$ follows that $\sigma \Gamma \vdash 
-                        (\sigma t_1) (\sigma t_2) : \sigma X$. Again, 
-                        $(\sigma,T_1)$ is solution for $(\Gamma, t_1 
-                        t_2, X, \mathcal{C}^{\prime})$, hence $\sigma 
-                        X = T_1$, we have $\sigma \Gamma \vdash 
-                        (\sigma t_1) (\sigma t_2) : T_1$, so $(\sigma, 
-                        T_1)$ is solution for $(\Gamma, t_1 \, t_2)$
-                        which is like to say $(\sigma, T_1)\in\Omega$ 
-                        as required.
+                \begin{array}{rl}
+                  \Gamma \vdash t_{1}:S_{1} \; \textbar \;
+                    \mathcal{C}_1  &
+                \Gamma \vdash  t_{2}:S_{2} \; \textbar \;
+                    \mathcal{C}_2  \\
+                 \mathcal{C}^{\prime} = \mathcal{C}_1 \cup 
+                    \mathcal{C}_2
+                    \cup & \{ S_1 \triangleq S_2 \rightarrow X 
+                \} \end{array}}\over
+                {\Gamma \vdash t_{1} \, t_{2} : X\;
+            \textbar_{\mathcal{X}_1 \cup \mathcal{X}_2 \cup
+                \{X\}} \; \mathcal{C}^{\prime} }}$ is the 
+                applied rule. By theorem hp, $(\sigma, T_1)$ is
+                solution for $(\Gamma,t_1\,t_2)$, that is $\sigma
+                \Gamma \vdash \sigma t_1 \, \sigma t_2 : T_1$. By
+                inversion lemma there exists $S_3$ such that $\sigma \Gamma
+                \vdash \sigma t_1 : S_3 \rightarrow T_1$ and $\sigma
+                \Gamma \vdash \sigma t_2 : S_3$, so $(\sigma,
+                S_3\rightarrow T_1)$ is solution for $(\Gamma, t_1)$
+                and $(\sigma, S_3)$ is solution for $(\Gamma, t_2)$.
+                This allow us to apply induction hp: let $(\rho_1,
+                S_3\rightarrow T_1)$ be solution for $(\Gamma, t_1,
+                S_1, \mathcal{C}_1)$ and $(\rho_2,
+                S_3)$ be solution for $(\Gamma, t_2, S_2,
+                \mathcal{C}_2)$, such that
+                $\rho_1\setminus\mathcal{X}_1
+                = \rho_2\setminus\mathcal{X}_2 = \sigma$. We construct
+                a new substitution $\rho$ such that:
+                \begin{displaymath}
+                    \rho = \left \lbrace
+                    \begin{array}{ll}
+                        Y \mapsto U & \text{if}\quad 
+                        Y\not\in\mathcal{X}\wedge Y\mapsto
+                        U\in\sigma\\
+                        Y_1 \mapsto U_1 & \text{if}\quad 
+                        Y_1\in\mathcal{X}_1\wedge Y_1\mapsto
+                        U_1\in\rho_1\\
+                        Y_2 \mapsto U_2 & \text{if}\quad 
+                        Y_2\in\mathcal{X}_2\wedge Y_2\mapsto
+                        U_2\in\rho_2\\
+                        X\mapsto T_1
+                    \end{array}\right .
+                \end{displaymath}
+                Now we have to show that $(\rho, T_1)$ is solution for
+                $(\Gamma, t_1\, t_2, X,
+                \mathcal{C}_1\cup\mathcal{C}_2\cup\{S_1\triangleq
+                S_2\rightarrow X\})$ and
+                $\rho\setminus(\mathcal{X}_1\cup\mathcal{X}_2\cup\{X\})
+                = \sigma$:
+                \begin{itemize}
+                    \item   by def of $\rho$ follows $\rho X = T_1$.
+                    By induction hp $\mathcal{X}_1, \mathcal{X}_2$ do
+                    not overlap and $rho$ does what $\rho_1, \rho_2$
+                    do on variables belong to either $\mathcal{X}_1$
+                    or $\mathcal{X}_2$, hence $\rho \Join
+                    \mathcal{C}_1$ and $\rho \Join \mathcal{C}_2$. To
+                    show that $\rho \Join S_1\triangleq S_2\rightarrow
+                    X$ observe that $\rho S_1 = \rho_1 S_1$ and $\rho
+                    S_2 = \rho_2 S_2$ since free variable choosen in a
+                    derivation cannot appear in other subderivations,
+                    so $\rho S_1 = \rho_1 S_1 = S_3 \rightarrow T_1$, but
+                    $\rho_2 S_2 = S_3$ by induction hp, hence $S_3
+                    \rightarrow T_1 = \rho_2 S_2 \rightarrow T_1 =
+                    \rho S_2\rightarrow \rho X = \rho (S_2\rightarrow
+                    X)$ as required. This prove that $(\rho, T_1)$ is solution
+                    
+                    \item   $\rho\setminus(\mathcal{X}_1\cup\mathcal{X}_2
+                        \cup\{X\} = \sigma$ by first rule in def of
+                        $\rho$
+                \end{itemize}
                 
+                So $(\rho, T_1)$ is solution for $(\Gamma, t_1 \, t_2,
+                X, \mathcal{C}_1\cup\mathcal{C}_2\cup\{S_1\triangleq
+                S_2\rightarrow X\})$
+                which is like to say $(\rho, T_1)\in\Theta$ 
+                as required.
+        
         \end{description}
     \end{proof}
     \normalsize
