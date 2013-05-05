@@ -1118,6 +1118,110 @@
     \normalsize
 \end{frame}
 
+\begin{frame}{Extended example}
+    \footnotesize
+        \begin{overprint}
+            \onslide<1>
+            \begin{tabular}{c}
+                $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                (x\, x):S_1\,|_{\mathcal{X}}\, \mathcal{C}}}$
+            \end{tabular}
+            \onslide<2>
+                \begin{tabular}{c}
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        x\, x:S_2\,|_{\mathcal{X}}\, \mathcal{C}}}} $\\
+                    $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                    (x\, x):X\rightarrow S_2\,|_{\mathcal{X}}\, \mathcal{C}}}$
+                \end{tabular}
+            \onslide<3>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:S_1\,|_{\mathcal{X}_1}\, 
+                            \mathcal{C}_1}}} $                        
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        x\, x:A\,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup
+                        \{A\}}\, \mathcal{C}_1\cup\mathcal{C}_2\cup
+                        \{S_1 \triangleq S_2\rightarrow A\}}}} $\\
+                    $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                    (x\, x):X\rightarrow A\,|_{\mathcal{X}_1
+                    \cup\mathcal{X}_2\cup \{A\}}\, \mathcal{C}_1\cup
+                        \mathcal{C}_2\cup \{S_1 \triangleq S_2\rightarrow A\}}}$
+                \end{tabular}
+            \onslide<4>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{x:X\in \Gamma,
+                            x:X }}} $  \\
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:X\,|_{\emptyset}\, 
+                            \emptyset}}} $                        
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        x\, x:A\,|_{\mathcal{X}_2\cup
+                        \{A\}}\, \mathcal{C}_2\cup
+                        \{X \triangleq S_2\rightarrow A\}}}} $\\
+                    $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                    (x\, x):X\rightarrow A\,|_{
+                        \mathcal{X}_2\cup \{A\}}\, 
+                        \mathcal{C}_2\cup \{X \triangleq S_2\rightarrow A\}}}$
+                \end{tabular}
+            \onslide<5>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{x:X\in \Gamma,
+                            x:X }}} $  \\
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:X\,|_{\emptyset}\, 
+                            \emptyset}}} $                        
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{x:X\in \Gamma,
+                            x:X }}} $  \\
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:X\,|_{\emptyset}\, 
+                            \emptyset}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        x\, x:A\,|_{
+                        \{A\}}\, \{X \triangleq X\rightarrow A\}}}} $\\
+                    $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                    (x\, x):X\rightarrow A\,|_{
+                        \{A\}}\,  \{X \triangleq X\rightarrow A\}}}$
+                \end{tabular}
+                \begin{block}{Conclusion}
+                    We conclude that the term $\lambda x:X.(x \, x))$ has
+                    \emph{abstract type} $X\rightarrow A$ if it is
+                    possible to find a type substitution $\sigma$ such
+                    that $\sigma \Join \{X\triangleq X\rightarrow A\}$
+                \end{block}
+        \end{overprint}
+    \normalsize
+\end{frame}
+
 \subsection{Definition of solution for $(\Gamma, t, S, \mathcal{C})$}
 
 \begin{frame}
