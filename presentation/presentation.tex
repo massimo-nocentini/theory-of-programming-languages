@@ -606,25 +606,25 @@
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
                 (x\, z)\, (y \, 
                 z):A\,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup\{A\}}\, 
-                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1=S_2\rightarrow 
+                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1\triangleq S_2\rightarrow 
                 A\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
                     \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
                     \,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup\{A\}}\, 
-                    \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1=S_2\rightarrow 
+                    \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1\triangleq S_2\rightarrow 
                     A\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
                     y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
                     \rightarrow Z\rightarrow A\,|_{\mathcal{X}_1
                     \cup\mathcal{X}_2\cup\{A\}}\, 
-                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1=S_2\rightarrow 
+                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1\triangleq S_2\rightarrow 
                 A\}}}}  $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
                     ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
                 Z\rightarrow 
                 A\,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup\{A\}}\, 
-                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1=S_2\rightarrow 
+                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1\triangleq S_2\rightarrow 
                 A\}}} $
                 \end{tabular}
             \onslide<6>
@@ -649,7 +649,8 @@
                             x\, 
                             z:B\,|_{\mathcal{X}_3\cup\mathcal{X}_4
                             \cup{\{B\}}}\, 
-                            \mathcal{C}_3\cup\mathcal{C}_4\cup\{S_3 = 
+                            \mathcal{C}_3\cup\mathcal{C}_4\cup\{S_3
+                            \triangleq  
                             S_4 \rightarrow B\}}}} $
                             \end{tabular}&
                             %put in the following tabular the previous 
@@ -665,29 +666,29 @@
                 (x\, z)\, (y \, 
                 z):A\,|_{\mathcal{X}_3\cup\mathcal{X}_4\cup\mathcal{X}_2
                     \cup\{A,B\}}\, 
-                \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
-                A, S_3 = S_4 \rightarrow B\}}}} $\\
+                \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, S_3 \triangleq  S_4 \rightarrow B\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
                     \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
                     \,|_{\mathcal{X}_3\cup\mathcal{X}_4\cup\mathcal{X}_2
                         \cup\{A,B\}}\, 
-                    \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
-                    A, S_3 = S_4 \rightarrow B\}}}} $\\
+                    \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                    A, S_3 \triangleq  S_4 \rightarrow B\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
                     y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
                     \rightarrow Z\rightarrow 
                     A\,|_{\mathcal{X}_3\cup\mathcal{X}_4
                     \cup\mathcal{X}_2\cup\{A,B\}}\, 
-                \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
-                A, S_3 = S_4 \rightarrow B\}}}}  $\\
+                \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, S_3 \triangleq  S_4 \rightarrow B\}}}}  $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
                     ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
                 Z\rightarrow 
                 A\,|_{\mathcal{X}_3\cup\mathcal{X}_4\cup\mathcal{X}_2
                     \cup\{A,B\}}\, 
-                \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
-                A, S_3 = S_4 \rightarrow B\}}} $
+                \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, S_3 \triangleq  S_4 \rightarrow B\}}} $
                 \end{tabular}
             \onslide<7>
                 \begin{tabular}{c}
@@ -711,7 +712,8 @@
                             $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
                             \vdash
                             x\, z:B\,|_{\mathcal{X}_4
-                            \cup{\{B\}}}\, \mathcal{C}_4\cup\{X = S_4 
+                            \cup{\{B\}}}\, \mathcal{C}_4\cup\{X
+                            \triangleq  S_4 
                             \rightarrow B\}}}} $
                             \end{tabular}&
                             %put in the following tabular the previous 
@@ -727,27 +729,27 @@
                 (x\, z)\, (y \, 
                 z):A\,|_{\mathcal{X}_4\cup\mathcal{X}_2
                     \cup\{A,B\}}\, 
-                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
-                A, X = S_4 \rightarrow B\}}}} $\\
+                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, X \triangleq  S_4 \rightarrow B\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
                     \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
                     \,|_{\mathcal{X}_4\cup\mathcal{X}_2
                         \cup\{A,B\}}\, 
-                    \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
-                    A, X = S_4 \rightarrow B\}}}} $\\
+                    \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                    A, X \triangleq  S_4 \rightarrow B\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
                     y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
                     \rightarrow Z\rightarrow A\,|_{\mathcal{X}_4
                     \cup\mathcal{X}_2\cup\{A,B\}}\, 
-                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
-                A, X = S_4 \rightarrow B\}}}}  $\\
+                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, X \triangleq  S_4 \rightarrow B\}}}}  $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
                     ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
                 Z\rightarrow A\,|_{\mathcal{X}_4\cup\mathcal{X}_2
                     \cup\{A,B\}}\, 
-                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B=S_2\rightarrow 
-                A, X = S_4 \rightarrow B\}}} $
+                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, X \triangleq  S_4 \rightarrow B\}}} $
                 \end{tabular}
             \onslide<8>
                 \begin{tabular}{c}
@@ -771,7 +773,7 @@
                             \end{tabular}\\
                             $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
                             \vdash
-                            x\, z:B\,|_{{\{B\}}}\, \{X = Z \rightarrow 
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
                             B\}}}} $
                             \end{tabular}&
                             %put in the following tabular the previous 
@@ -786,26 +788,30 @@
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
                 (x\, z)\, (y \, z):A\,|_{\mathcal{X}_2
                     \cup\{A,B\}}\, 
-                \mathcal{C}_{2}\cup\{B=S_2\rightarrow A, X = Z 
+                \mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow A, X
+                \triangleq  Z 
                 \rightarrow B\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
                     \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
                     \,|_{\mathcal{X}_2
                         \cup\{A,B\}}\, 
-                    \mathcal{C}_{2}\cup\{B=S_2\rightarrow A, X = Z 
+                    \mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow A,
+                    X \triangleq  Z 
                     \rightarrow B\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
                     y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
                     \rightarrow Z\rightarrow 
                     A\,|_{\mathcal{X}_2\cup\{A,B\}}\, 
-                    \mathcal{C}_{2}\cup\{B=S_2\rightarrow A, X = Z 
+                    \mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow A,
+                    X \triangleq  Z 
                     \rightarrow B\}}}}  $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
                     ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
                 Z\rightarrow A\,|_{\mathcal{X}_2
                     \cup\{A,B\}}\, 
-                    \mathcal{C}_{2}\cup\{B=S_2\rightarrow A, X = Z 
+                    \mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow A,
+                    X \triangleq  Z 
                     \rightarrow B\}}} $
                 \end{tabular}
             \onslide<9>
@@ -830,7 +836,7 @@
 %                            \end{tabular}\\
                             $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
                             \vdash
-                            x\, z:B\,|_{{\{B\}}}\, \{X = Z \rightarrow 
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
                             B\}}}} $
                             \end{tabular}&
                         \begin{tabular}{c}
@@ -854,36 +860,36 @@
                             z:C\,|_{\mathcal{X}_5\cup\mathcal{X}_6\cup
                             \{C\}}\, 
                             \mathcal{C}_5\cup\mathcal{C}_6\cup\{
-                            S_5 = S_6 \rightarrow C\}}}} $                      
+                            S_5 \triangleq  S_6 \rightarrow C\}}}} $                      
                     \end{tabular}
                     \end{tabular}\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
                 (x\, z)\, (y \, 
                 z):A\,|_{\mathcal{X}_5\cup\mathcal{X}_6
                     \cup\{A,B,C\}}\, 
-                \mathcal{C}_5\cup\mathcal{C}_6\cup\{B=C\rightarrow A, 
-                X = Z \rightarrow B, S_5 = S_6 \rightarrow C\}}}} $\\
+                \mathcal{C}_5\cup\mathcal{C}_6\cup\{B\triangleq C\rightarrow A, 
+                X \triangleq  Z \rightarrow B, S_5 \triangleq  S_6 \rightarrow C\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
                     \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
                     \,|_{\mathcal{X}_5\cup\mathcal{X}_6
                         \cup\{A,B,C\}}\, 
-                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B=C\rightarrow 
-                    A, X = Z \rightarrow B, S_5 = S_6 \rightarrow 
+                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                    A, X \triangleq  Z \rightarrow B, S_5 \triangleq  S_6 \rightarrow 
                     C\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
                     y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
                     \rightarrow Z\rightarrow 
                     A\,|_{\mathcal{X}_5\cup\mathcal{X}_6\cup\{A,B,C\}}\, 
-                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B=C\rightarrow 
-                    A, X = Z \rightarrow B, S_5 = S_6 \rightarrow 
+                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                    A, X \triangleq  Z \rightarrow B, S_5 \triangleq  S_6 \rightarrow 
                     C\}}}}  $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
                     ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
                 Z\rightarrow A\,|_{\mathcal{X}_5\cup\mathcal{X}_6
                     \cup\{A,B,C\}}\, 
-                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B=C\rightarrow 
-                    A, X = Z \rightarrow B, S_5 = S_6 \rightarrow 
+                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                    A, X \triangleq  Z \rightarrow B, S_5 \triangleq  S_6 \rightarrow 
                     C\}}} $
                 \end{tabular}
             \onslide<10>
@@ -908,7 +914,7 @@
 %                            \end{tabular}\\
                             $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
                             \vdash
-                            x\, z:B\,|_{{\{B\}}}\, \{X = Z \rightarrow 
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
                             B\}}}} $
                             \end{tabular}&
                         \begin{tabular}{c}
@@ -931,31 +937,33 @@
                             \vdash
                             y \, z:C\,|_{\mathcal{X}_6\cup
                             \{C\}}\, \mathcal{C}_6\cup\{
-                            Y = S_6 \rightarrow C\}}}} $                      
+                            Y \triangleq  S_6 \rightarrow C\}}}} $                      
                     \end{tabular}
                     \end{tabular}\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
                 (x\, z)\, (y \, z):A\,|_{\mathcal{X}_6
-                    \cup\{A,B,C\}}\, \mathcal{C}_6\cup\{B=C\rightarrow 
-                A, X = Z \rightarrow B, Y = S_6 \rightarrow C\}}}} $\\
+                    \cup\{A,B,C\}}\, \mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                A, X \triangleq  Z \rightarrow B, Y \triangleq  S_6 \rightarrow C\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
                     \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
                     \,|_{\mathcal{X}_6
                         \cup\{A,B,C\}}\, 
-                    \mathcal{C}_6\cup\{B=C\rightarrow A, X = Z 
-                    \rightarrow B, Y = S_6 \rightarrow C\}}}} $\\
+                    \mathcal{C}_6\cup\{B\triangleq C\rightarrow A, X
+                    \triangleq  Z 
+                    \rightarrow B, Y \triangleq  S_6 \rightarrow C\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
                     y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
                     \rightarrow Z\rightarrow 
                     A\,|_{\mathcal{X}_6\cup\{A,B,C\}}\, 
-                    \mathcal{C}_6\cup\{B=C\rightarrow A, X = Z 
-                    \rightarrow B, Y = S_6 \rightarrow C\}}}}  $\\
+                    \mathcal{C}_6\cup\{B\triangleq C\rightarrow A, X
+                    \triangleq  Z 
+                    \rightarrow B, Y \triangleq  S_6 \rightarrow C\}}}}  $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
                     ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
                 Z\rightarrow A\,|_{\mathcal{X}_6
-                    \cup\{A,B,C\}}\, \mathcal{C}_6\cup\{B=C\rightarrow 
-                    A, X = Z \rightarrow B, Y = S_6 \rightarrow C\}}} 
+                    \cup\{A,B,C\}}\, \mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                    A, X \triangleq  Z \rightarrow B, Y \triangleq  S_6 \rightarrow C\}}} 
                     $
                 \end{tabular}
             \onslide<11>
@@ -980,7 +988,7 @@
 %                            \end{tabular}\\
                             $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
                             \vdash
-                            x\, z:B\,|_{{\{B\}}}\, \{X = Z \rightarrow 
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
                             B\}}}} $
                             \end{tabular}&
                         \begin{tabular}{c}
@@ -1004,26 +1012,28 @@
                             \vdash
                             y \, z:C\,|_{
                             \{C\}}\, \{
-                            Y = Z \rightarrow C\}}}} $                      
+                            Y \triangleq  Z \rightarrow C\}}}} $                      
                     \end{tabular}
                     \end{tabular}\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
-                (x\, z)\, (y \, z):A\,|_{\{A,B,C\}}\, \{B=C\rightarrow 
-                A, X = Z \rightarrow B, Y = Z \rightarrow C\}}}} $\\
+                (x\, z)\, (y \, z):A\,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow 
+                A, X \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
                     \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
-                    \,|_{\{A,B,C\}}\, \{B=C\rightarrow A, X = Z 
-                    \rightarrow B, Y = Z \rightarrow C\}}}} $\\
+                    \,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow A, X
+                    \triangleq Z 
+                    \rightarrow B, Y \triangleq  Z \rightarrow C\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
                     y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
                     \rightarrow Z\rightarrow A\,|_{\{A,B,C\}}\, 
-                    \{B=C\rightarrow A, X = Z \rightarrow B, Y = Z 
+                    \{B\triangleq C\rightarrow A, X \triangleq  Z
+                    \rightarrow B, Y \triangleq  Z 
                     \rightarrow C\}}}}  $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
                     ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
-                Z\rightarrow A\,|_{\{A,B,C\}}\, \{B=C\rightarrow A, X 
-                = Z \rightarrow B, Y = Z \rightarrow C\}}} $
+                Z\rightarrow A\,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow A, X 
+                \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}}} $
                 \end{tabular}
             \onslide<12>
                 \begin{tabular}{c}
@@ -1047,7 +1057,7 @@
 %                            \end{tabular}\\
                             $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
                             \vdash
-                            x\, z:B\,|_{{\{B\}}}\, \{X = Z \rightarrow 
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
                             B\}}}} $
                             \end{tabular}&
                         \begin{tabular}{c}
@@ -1071,28 +1081,38 @@
                             \vdash
                             y \, z:C\,|_{
                             \{C\}}\, \{
-                            Y = Z \rightarrow C\}}}} $                      
+                            Y \triangleq  Z \rightarrow C\}}}} $                      
                     \end{tabular}
                     \end{tabular}\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
-                (x\, z)\, (y \, z):A\,|_{\{A,B,C\}}\, \{B=C\rightarrow 
-                A, X = Z \rightarrow B, Y = Z \rightarrow C\}}}} $\\
+                (x\, z)\, (y \, z):A\,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow 
+                A, X \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
                     \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
-                    \,|_{\{A,B,C\}}\, \{B=C\rightarrow A, X = Z 
-                    \rightarrow B, Y = Z \rightarrow C\}}}} $\\
+                    \,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow A, X
+                    \triangleq Z 
+                    \rightarrow B, Y \triangleq  Z \rightarrow C\}}}} $\\
                 $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
                     y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
                     \rightarrow Z\rightarrow A\,|_{\{A,B,C\}}\, 
-                    \{B=C\rightarrow A, X = Z \rightarrow B, Y = Z 
+                    \{B\triangleq C\rightarrow A, X \triangleq  Z
+                    \rightarrow B, Y \triangleq  Z 
                     \rightarrow C\}}}}  $\\
                 $\displaystyle {{}
                     \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
                     ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
-                Z\rightarrow A\,|_{\{A,B,C\}}\, \{B=C\rightarrow A, X 
-                = Z \rightarrow B, Y = Z \rightarrow C\}}} $
+                Z\rightarrow A\,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow A, X 
+                \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}}} $
                 \end{tabular}
-        \end{overprint}
+                \begin{block}{Conclusion}
+                    We conclude that the term $\lambda x:X. \lambda y:Y.
+                    \lambda z:Z.  ((x\, z)\, (y \, z))$ has type $X
+                    \rightarrow Y \rightarrow Z\rightarrow A$ if it is
+                    possible to find a type substitution $\sigma$ such
+                    that $\sigma \Join \{B\triangleq C\rightarrow A, X 
+                    \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}$
+                \end{block}
+    \end{overprint}
     \end{center}
     \normalsize
 \end{frame}
