@@ -338,9 +338,36 @@
             \Gamma \vdash t:T_1 \rightarrow \sigma\Gamma \vdash \sigma t: \sigma T_1
         \end{displaymath}
     \end{theorem}
-    \begin{proof}
-        TODO
+    \footnotesize
+    \begin{proof}[Proof. By structural induction on the shape of term
+    $t$]
+        \begin{description} 
+            \item[$t = x$] By theorem hp $\Gamma \vdash x:S_1$. By
+            inversion lemma $x:S_1 \in \Gamma$. Get any substitution
+            $\sigma$ and apply it memberwise, $x:\sigma S_1:\sigma
+            \Gamma$ holds because if $\sigma S_1 = S_2$ for some
+            $S_2$, then the same happens in $\sigma\Gamma$. By
+            \emph{T-VAR} rule follow $\sigma\Gamma\vdash x:\sigma S_1$
+            as required
+            \item[$t = \lambda x:S_1.t_2$] By theorem hp $\Gamma
+            \vdash \lambda x:S_1.t_2: S_2$. By inversion
+            lemma $S_2 = S_1 \rightarrow S_3$ for some $S_3$ such that
+            $\Gamma,x:S_1\vdash t_2:S_3$. By induction
+            hp $\sigma\Gamma,x:\sigma S_1\vdash \sigma t_2:\sigma S_3$
+            holds. By \emph{T-ABS} rule follow $\sigma\Gamma \vdash
+            \lambda x:\sigma S_1. \sigma t_2:\sigma S_1\rightarrow
+            \sigma S_3$ as required
+            \item[$t = t_1 t_2$] By theorem hp $\Gamma \vdash t_1\,
+            t_2:S_1$. By inversion lemma exists $S_2$ such that
+            $\Gamma\vdash t_1:S_2\rightarrow S_1$ and $\Gamma\vdash
+            t_2:S_2$. By induction hp $\sigma\Gamma\vdash\sigma
+            t_1:\sigma S_2\rightarrow \sigma S_1$ and $\sigma\Gamma\vdash
+            \sigma t_2:\sigma S_2$ hold. By \emph{T-APP} rule follow
+            $\sigma\Gamma \vdash (\sigma t_1)\, (\sigma t_2):\sigma
+            S_1$ as required
+        \end{description} 
     \end{proof}
+    \normalsize
 \end{frame}
 
 \subsection{Parametric polymorphism and type inference}
