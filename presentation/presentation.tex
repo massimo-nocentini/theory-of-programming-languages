@@ -59,11 +59,12 @@
 \subtitle{constraint-based, unification and a little interpreter}
 
 \author[Massimo Nocentini] % (optional, use only with lots of authors)
-{Massimo~Nocentini\\\texttt{massimo.nocentini@gmail.com}}
+{Massimo~Nocentini\\\texttt{massimo.nocentini@gmail.com}\\~\\~\\
+    Prof. Battistina Venneri}
 % - Give the names in the same order as the appear in the paper.
 % - Use the \inst{?} command only if the authors have different
 %   affiliation.
-
+ 
  \institute[UniversitaStudiFirenze] % (optional, but mostly needed)
  { Universit\`a degli Studi di Firenze }
 %   \inst{1}%
@@ -197,7 +198,7 @@
     \end{block}
 \end{frame}
 
-\begin{frame}{Typing rules review}
+\begin{frame}{Typing rules review and Inversion lemma}
     \begin{block}{Typing rules}
         \begin{center}
             \begin{tabular}{ c r }
@@ -213,6 +214,17 @@
                     {\Gamma \vdash t_{1} \, t_{2} : T_{12}}} $ & (\emph{T-APP}) \\
             \end{tabular}
         \end{center}
+    \end{block}
+    \begin{block}{Inversion Lemma}
+        \begin{itemize}
+            \item if $\Gamma \vdash x:S_1$ then $x:S_1\in\Gamma$
+            \item if $\Gamma \vdash \lambda x:S_1.t_2:S_3$ then $S_3 =
+            S_1\rightarrow S_2$ for some $S_2$ such that $\Gamma,
+            x:S_1\vdash t_2:S_2$
+            \item if $\Gamma \vdash t_1 \, t_2:S_2$ then there exists $S_1$
+            such that $\Gamma \vdash t_1: S_1\rightarrow S_2$ and
+            $\Gamma \vdash t_2:S_2$
+        \end{itemize}
     \end{block}
 \end{frame}
 
