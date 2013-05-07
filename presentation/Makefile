@@ -1,3 +1,5 @@
+presentation-small:
+	pdflatex presentation-small.tex
 presentation:
 	pdflatex presentation.tex
 clean:

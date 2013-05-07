@@ -1,0 +1,1534 @@
+% $Header:
+% /home/vedranm/bitbucket/beamer/solutions/conference-talks/conference-ornate-20min.en.tex,v
+% 90e850259b8b 2007/01/28 20:48:30 tantau $
+
+\documentclass[8pt]{beamer}
+
+% This file is a solution template for:
+
+% - Talk at a conference/colloquium.
+% - Talk length is about 20min.
+% - Style is ornate.
+
+
+
+% Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+%
+% In principle, this file can be redistributed and/or modified under
+% the terms of the GNU Public License, version 2.
+%
+% However, this file is supposed to be a template to be modified
+% for your own needs. For this reason, if you use this file as a
+% template and not specifically distribute it as part of a another
+% package/program, I grant the extra permission to freely copy and
+% modify this file as you see fit and even to delete this copyright
+% notice. 
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  % or ...
+
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+\usepackage[english]{babel}
+% or whatever
+
+\usepackage[latin1]{inputenc}
+% or whatever
+\usepackage{wasysym}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{cancel}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% \lstset{
+%   language=XML,
+%   basicstyle=\footnotesize,%\ttfamily,
+%   columns=fullflexible,
+%   morekeywords={encoding,
+%     xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute}
+% }
+\setbeamersize{text margin left=.5cm,text margin right=.5cm} 
+\title[Type reconstruction] {Type reconstruction}
+
+\subtitle{constraint-based, unification and a little interpreter}
+
+\author[Massimo Nocentini] % (optional, use only with lots of authors)
+{Massimo~Nocentini\\\texttt{massimo.nocentini@gmail.com}\\~\\~\\
+    Prof. Battistina Venneri}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+ 
+ \institute[UniversitaStudiFirenze] % (optional, but mostly needed)
+ { Universit\`a degli Studi di Firenze }
+%   \inst{1}%
+%   Department of Computer Science\\
+%   University of Somewhere
+%   \and
+%   \inst{2}%
+%   Department of Theoretical Philosophy\\
+%   University of Elsewhere}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date[CoursePresentation] % (optional, should be abbreviation of conference name)
+{Firenze, \today}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{Theory of Programming Languages}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=1.5cm]{university-logo}{logo/unifi}
+% \logo{\pgfuseimage{university-logo}}
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Contents}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+   \begin{center}
+     \includegraphics[scale=.065]{logo/unifi}
+   \end{center}
+\end{frame}
+
+\begin{frame}{Road map}
+  \tableofcontents[pausesections]
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+
+% Structuring a talk is a difficult task and the following structure
+% may not be suitable. Here are some rules that apply for this
+% solution: 
+
+% - Exactly two or three sections (other than the summary).
+% - At *most* three subsections per section.
+% - Talk about 30s to 2min per frame. So there should be between about
+%   15 and 30 frames, all told.
+
+% - A conference audience is likely to know very little of what you
+%   are going to talk about. So *simplify*!
+% - In a 20min talk, getting the main ideas across is hard
+%   enough. Leave out details, even if it means being less precise than
+%   you think necessary.
+% - If you omit details that are vital to the proof/implementation,
+%   just say so once. Everybody will be happy with that.
+
+\begin{frame}{Syntax review}
+    \begin{block}{Terms}
+        \begin{center}
+            \begin{tabular}{ r l r }
+              $t ::= $ & $x$ & \emph{variable} \\
+               & $\lambda x:T.t$ & \emph{abstraction} \\
+               & $t \, t$ & \emph{application} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+    \begin{block}{Values}
+        \begin{center}
+            \begin{tabular}{ r l r }
+              $v ::= $ & $\lambda x:T.t$ & \emph{abstraction value} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+    \begin{block}{Types}
+        \begin{center}
+            \begin{tabular}{ r l r }
+              $T ::= $ & $T \rightarrow T$ & \emph{function type} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+    \begin{block}{Contexts}
+        \begin{center}
+            \begin{tabular}{ r l r }
+              $\Gamma ::= $ & $\emptyset$ & \emph{empty context} \\
+               & $\Gamma, x:T$ & \emph{variable binding} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Evaluation rules review}
+    \begin{block}{Evaluation rules}
+
+        \begin{center}
+            \begin{tabular}{ c r }
+                    $\displaystyle {{t_{1} \rightarrow t_{1}^{\prime}}\over
+                    {t_{1} \, t_{2} \rightarrow t_{1}^{\prime} \, t_{2}}}
+                $ & (\emph{E-APP1}) \\ 
+               & \\
+               $\displaystyle{{t_{2} \rightarrow t_{2}^{\prime}}\over
+                    {v_{1} \, t_{2} \rightarrow v_{1} \, t_{2}^{\prime}}}$ &
+                         (\emph{E-APP2}) \\
+               & \\ 
+               $\displaystyle(\lambda x:T_{11}.t_{12})v_{2} \rightarrow 
+                [x \mapsto v_{2}]t_{12}$ & (\emph{E-APPABS}) \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Typing rules review and Inversion lemma}
+    \begin{block}{Typing rules}
+        \begin{center}
+            \begin{tabular}{ c r }
+                    $\displaystyle {{x:T \in \Gamma}\over
+                    {\Gamma \vdash x:T}} $ & (\emph{T-VAR}) \\ 
+               & \\
+               $\displaystyle{{\Gamma, x:T_{1} \vdash t_{2}:T_{2}}\over
+                    {\Gamma \vdash \lambda x:T_{1}.t_{2} : T_{1} 
+                        \rightarrow T_{2}}} $ & (\emph{T-ABS}) \\
+               & \\ 
+               $\displaystyle{{\Gamma \vdash t_{1}:T_{11} \rightarrow T_{12} \quad
+                     \Gamma \vdash t_{2}:T_{11}}\over
+                    {\Gamma \vdash t_{1} \, t_{2} : T_{12}}} $ & (\emph{T-APP}) \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+    \begin{block}{Inversion Lemma}
+        \begin{itemize}
+            \item if $\Gamma \vdash x:S_1$ then $x:S_1\in\Gamma$
+            \item if $\Gamma \vdash \lambda x:S_1.t_2:S_3$ then $S_3 =
+            S_1\rightarrow S_2$ for some $S_2$ such that $\Gamma,
+            x:S_1\vdash t_2:S_2$
+            \item if $\Gamma \vdash t_1 \, t_2:S_2$ then there exists $S_1$
+            such that $\Gamma \vdash t_1: S_1\rightarrow S_2$ and
+            $\Gamma \vdash t_2:S_2$
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\section{Introduction}
+
+\subsection{Type variables and substitutions}
+
+\begin{frame}{Introduction}
+    Up to now we've worked with terms which all depends on
+    \emph{explicit} type annotation, that is every $\lambda$-
+    abstraction have to declare the \emph{concrete} type for the variable
+    it introduce. \\~\\
+    
+    It should be interesting to be ``lazy'' (in the fisical sense, not
+    because we like to be some instance of a \emph{lazy} structures 
+    \smiley) and say:
+    \begin{center}
+        ``I don't care to declare a \emph{concrete} type for my variable now,\\
+        suspend the decision and call this type $X$, I'll specify it later''
+    \end{center}
+     
+    Suppose we're deeply ``lazy'', why not apply the previous though
+    to \emph{all} variables we introduce in our program? When are our terms 
+    well typed if no concrete type is declared at all? \\~\\
+    
+    In this lecture we'll see a method which allow us to be ``deeply lazy''
+    while been able to type our meaningful terms and discard divergent ones
+    (\texttt{lambda x.(x x)}, remember?)
+\end{frame}
+
+\begin{frame}{Augment type set with type variables}
+    In order to leave unspecified the type for a variable we've to augment
+    our language with a new type category, which we'll call \emph{type
+    variables}, written as $\mathcal{A}$:
+    \begin{block}{Types - augmented with type variables}
+        \begin{center}
+            \begin{tabular}{ r l l }
+              $T ::= $ & $T \rightarrow T$ & \emph{function type} \\
+               & $\mathcal{A}$ & \emph{type variable} \\
+              $\mathcal{A} ::= $ & $\{A,B,\ldots,X_{i \in \mathbb{N}},
+                \ldots \}$ & \emph{type variables} \\
+            \end{tabular}
+        \end{center}
+    \end{block}
+    
+    Let $X \in \mathcal{A}$:
+    \begin{itemize}
+        \item there's no typing rule that uses the category $\mathcal{A}$
+        \item $X$ can represent a \emph{basic} type
+            (ie. \texttt{Bool}, \texttt{Nat}, \ldots) or another 
+            unspecified type
+        \item $X$, being a type, can be used by the defined typing rules
+        \item $X \not = Y, \forall Y \in \mathcal{A} \setminus \{X\}$, 
+            in other words, $\mathcal{A}$ is infinite and types represented
+            by different type variables are different too
+    \end{itemize}
+    
+    \begin{example}
+        \begin{displaymath}
+            \begin{split}
+                \Gamma &\vdash \lambda x:X.x : X \rightarrow X\\
+                \Gamma &\vdash \lambda x:A.x : A \rightarrow A\\
+                \Gamma &\vdash \lambda s:S. \lambda z: Z. (s\, (s\, z)) : 
+                    (Z \rightarrow Z) \rightarrow Z \rightarrow Z\\
+            \end{split}
+        \end{displaymath}
+    \end{example}
+\end{frame}
+
+\begin{frame}{Substitutions}
+    \begin{center}
+        ``I'd like that type variable $X$ in my term $t$ to stands for 
+        \texttt{Nat} type. \\Is it possible to do a \emph{substitution}?''
+    \end{center}
+
+    
+    \begin{block}{Definition of substitution}
+        A \emph{type substitution} $\sigma$ is a mapping $\sigma: \mathcal{A}
+        \rightarrow T$ \\~\\
+        A \emph{substitution application} $\sigma T_{1}$ 
+        of a type substitution $\sigma$ to a type $T_{1}$ is defined 
+        inductively on the structure of types:
+        \begin{displaymath}
+            \begin{split}
+                X \in \mathcal{A} \wedge \exists T_1: (X \mapsto T_{1}) 
+                    \in \sigma & \rightarrow \sigma X = T_{1} \\ 
+                X \in \mathcal{A} \wedge \forall T_1: (X \mapsto T_{1}) 
+                    \not \in \sigma & \rightarrow \sigma X = X \\ 
+                T_{1} \text{ is a concrete type } &\rightarrow  
+                    \sigma T_{1} = T_{1}\\
+                T_{1}, T_{2} \in T & \rightarrow \sigma(T_{1} \rightarrow 
+                    T_{2}) = \sigma T_{1} \rightarrow \sigma T_{2} \\ 
+            \end{split}
+        \end{displaymath}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Typing relation is closed under substitution application}
+    For the following it is useful to introduce two combinations 
+    (let $\mathcal{C}$ is a set of contexts):
+    \begin{itemize}
+        \item $\Gamma = \{ x_1:T_1, \ldots, x_n:T_n\} \in \mathcal{C} 
+            \rightarrow \sigma\Gamma = (x_1:\sigma T_1, \ldots,
+                x_n:\sigma T_n) \in \mathcal{C}$
+        \item let $\sigma, \gamma$ be two type substitutions, their
+            composition $\sigma \circ \gamma$ is defined as follows:
+            \begin{displaymath}
+                \begin{split}
+                    \sigma \circ \rho &= \{X \mapsto \sigma T_1 | \,
+                        \forall T_1:(X \mapsto T_1) \in \rho \} \cup \\
+                    &\quad \{X \mapsto T_1 |\, 
+                        \forall T_{1}:\left( (X \mapsto T_1) \in \sigma \wedge
+                            (X \mapsto T_1) \not \in \rho\right)\} \\
+                \end{split}
+            \end{displaymath}
+            
+    \end{itemize}
+    \begin{theorem}
+        Let $\sigma$ be a type substitution, $\Gamma$ a context, 
+        $T_1 \in T$ and $t$ a term. Then:
+        \begin{displaymath}
+            \Gamma \vdash t:T_1 \rightarrow \sigma\Gamma \vdash \sigma t: \sigma T_1
+        \end{displaymath}
+    \end{theorem}
+\end{frame}
+
+\subsection{Parametric polymorphism and type inference}
+
+\begin{frame}{Parametric Polymorphism}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables.
+    A first question arises:
+    \begin{itemize}
+        \item $\forall \sigma. \exists T_1: 
+            \sigma \Gamma \vdash \sigma t : T_1$\\
+            {\footnotesize Do all type sustitution $\sigma$ makes the term 
+                $\sigma t$ typeable under assumption $\sigma \Gamma$?}\\~\\
+            If this is the case, why not write \emph{any} concrete type
+            using a type variable and use a substitution to obtain the 
+            original one? 
+            
+            \begin{example}
+                Write $\lambda s:Z \rightarrow Z.\lambda z:Z.(s\, (s\, z))$
+                instead of $\lambda s:Nat \rightarrow Nat.
+                    \lambda z:Nat.(s\, (s\, z))$ \\~\\
+                For example, if we work with concrete type $String$ just use 
+                $\sigma = \{Z \mapsto String\} $
+            \end{example}
+            
+            Holding type variables abstract during type checking is called
+            \emph{parametric polymorphism}: type variables are used to allow
+            a term in which they appear usable in many concrete contexts
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Type inference}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables.
+    A second question arises:
+    \begin{itemize}
+        \item $\exists \sigma. \exists T_1: 
+            \sigma \Gamma \vdash \sigma t : T_1$\\
+            {\footnotesize Is it always possible to find a type 
+                sustitution $\sigma$ such that the term 
+                $\sigma t$ is typeable under assumption $\sigma \Gamma$?}\\~\\
+            If this is the case, suppose $\not \exists T_{1}.
+            \Gamma \vdash t:T_1$, using 
+            type substitution $\sigma$ we're able to give a type $T_{2}$ 
+            to $\sigma t$, formally $\sigma \Gamma \vdash \sigma t: T_{2}$
+            
+            \begin{example}
+                $\lambda s:S.\lambda z:Z.(s\, (s\, z))$ 
+                has {\color{red} no} type, $\forall S,Z \in \mathcal{A}$\\~\\
+                but it has type if we use $\sigma = \{
+                    S \mapsto Nat \rightarrow Nat, Z \mapsto Nat\}$ or
+                    $\sigma = \{S \mapsto Z \rightarrow Z\}$
+            \end{example}
+            
+            Looking for valid ``instantiations'' of type variables is called
+            \emph{type inference}: the compiler fill in type information 
+            wherever the user don't specify them
+    \end{itemize}
+\end{frame}
+
+\subsection{Definition of solution for $(\Gamma, t)$}
+
+\begin{frame}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables.
+    \begin{block}{Definition of \emph{solution} for $(\Gamma, t)$}
+        Let $\sigma$ be a type substitution and $T_{1} \in T$.\\
+        A  \emph{solution} for $(\Gamma, t)$ is a pair $(\sigma, T_{1})$
+        such that $\sigma \Gamma \vdash \sigma t:T_{1}$
+    \end{block}
+    
+    \begin{example}
+        Let $\Gamma = \{f:X, a:Y\}$ and $t = f\, a$ then:
+        \begin{displaymath}
+            ([X \mapsto Nat \rightarrow Nat, Y \mapsto Nat], Nat) \quad 
+            ([X \mapsto Y \rightarrow Z], Z)
+        \end{displaymath}
+        are both solutions for $(\Gamma, t)$.
+    \end{example}
+\end{frame}
+
+\section{Constrait-based typing}
+\subsection{Constraint set and relations}
+\begin{frame}
+    Questions:
+    \begin{itemize}
+        \item During an execution of a type-checking algorithm, why
+                    not record constraints of the form $S_i = T_i$ instead 
+                    to actually perform a type comparison?
+        \item As we've seen in the last example, there exists countable 
+                    solutions for a pair $(\Gamma, t)$, are they related in 
+                    some way? 
+    \end{itemize}
+    
+    \begin{block}{Definition of \emph{constraint set} 
+                    and \emph{unify} relation}
+        A \emph{constraint set} $\mathcal{C}$ is a set of equations 
+        $\{S_i \triangleq T_i \}_{i \in \mathbb{N}}$ such that 
+        $\mathcal{C} \subseteq T \times T$
+        \\~\\
+        A type substitution $\sigma$ \emph{unify} an equation 
+        $S \triangleq T$, written as $\sigma \Join S \triangleq T$, 
+        if $\sigma S = \sigma T$
+        \\~\\
+        Extending the unification relation to constraint sets, a type substitution
+        $\sigma$ \emph{unify} a constraint set $\mathcal{C}$, written as 
+        $\sigma \Join \mathcal{C}$, if $\forall (S \triangleq T)
+        \in \mathcal{C}: \sigma \Join (S \triangleq T)$ 
+    \end{block}
+    
+    Answers:
+    \begin{itemize}
+        \item The modified type checking algorithm prove that a 
+            term $t$ has type $T_1$ under assumptions $\Gamma$ 
+            whenever there exists a type substitution $\sigma$ such that 
+            $\sigma \Join \mathcal{C}$
+        \item let $\mathcal{C}$ be a constraint set for a pair $(\Gamma, t)$.
+            Two solutions $(\sigma_1,T_1)$ and $(\sigma_2,T_2)$ are related if  
+            $\sigma_1 \Join \mathcal{C}$ and $\sigma_2 \Join \mathcal{C}$ 
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    Let's see an example of how we collect a constraint $S \triangleq T$
+    \begin{example}
+        Suppose to have an application term $t_1 t_2$ with $\Gamma \vdash t_1 : T_1$
+        and $\Gamma \vdash t_2 : T_2$ \\~\\
+        Instead of checking:
+        \begin{itemize}
+            \item $T_1$ has the form $T_2 \rightarrow T_{12}$, for some $T_{12}$
+            \item $t_1 t_2$ has type \emph{exactly} $T_{12}$
+        \end{itemize}
+        We suspend a decision for the type $T_{12}$, abstracting it with a 
+        \emph{fresh} type variable $X$, creating the constraint 
+        $T_1 \triangleq T_2 \rightarrow X$ (hence $t_1 t_2$
+        has type $X$ from now on!)
+    \end{example}
+    
+    The following questions drive what follow:
+    \begin{itemize}
+        \item given a pair $(\Gamma, t)$ there always exist a constraint set?
+        \item suppose a constraint set exists, is it unique?
+        \item assume the existence is enough, how is its construction defined
+                for all cases?
+        \item how can we use the constraint set to build a solution for $(\Gamma, t)$?
+    \end{itemize}
+\end{frame}
+
+\subsection{Constraint typing relation}
+
+\begin{frame}
+    \begin{block}{Definition of \emph{constraint typing relation} 
+            $\Gamma \vdash t : T_1 \; \textbar_\mathcal{X} \; \mathcal{C}$}
+        The \emph{constraint typing relation} where a term $t$ has type
+            $T_1$ under assumptions $\Gamma$ 
+            whenever exists a type substitution $\sigma$ such that 
+            $\sigma \Join \mathcal{C}$, written as
+            $\Gamma \vdash t : T_1 \textbar_\mathcal{X} \mathcal{C}$,
+            is defined inductively as follow:
+            \begin{center}
+                \begin{tabular}{ c r }
+                        $\displaystyle {{x:T \in \Gamma}\over
+                        {\Gamma \vdash x:T \; \textbar_{\emptyset}\;  \emptyset}} $ 
+                            & (\emph{CT-VAR}) \\ 
+                   & \\
+                   $\displaystyle{{\Gamma, x:T_{1} \vdash t_{2}:T_{2}\;
+                    \textbar_{\mathcal{X}} \; \mathcal{C} }\over
+                        {\Gamma \vdash \lambda x:T_{1}.t_{2} : T_{1} 
+                            \rightarrow T_{2}\;
+                    \textbar_{\mathcal{X}} \; \mathcal{C} }} $ & (\emph{CT-ABS}) \\
+                   & \\ 
+                   ${\displaystyle{{{
+                        \begin{array}{rl}
+                         \text{let} & X \text{ be fresh variable} \\
+                        \Gamma \vdash & t_{1}:T_{1} \; \textbar_{\mathcal{X}_1} \;
+                            \mathcal{C}_1  \\
+                        \Gamma \vdash & t_{2}:T_{2} \; \textbar_{\mathcal{X}_2} \;
+                            \mathcal{C}_2  \\
+                         \mathcal{C}^{\prime} = & \mathcal{C}_1 \cup \mathcal{C}_2
+                            \cup \{ T_1 \triangleq T_2 \rightarrow X \}
+                        \end{array}}\over
+                        {\Gamma \vdash t_{1} \, t_{2} : X\;
+                    \textbar_{\mathcal{X}_1 \cup \mathcal{X}_2 \cup
+                        \{X\}} \; \mathcal{C}^{\prime} }}}} $ & (\emph{CT-APP}) \\
+                \end{tabular}
+            \end{center}
+        The set $\mathcal{X}$ is used to track type variables introduced
+            by applications of rule \emph{CT-APP}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Extended example}
+\footnotesize
+    \begin{center}
+        \begin{overprint}
+            \onslide<1>
+            \begin{tabular}{c}
+                {}\\
+                {}\\
+                $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                \lambda y:Y.\lambda z:Z.  ((x\, z)\, (y \, 
+                z)):S_1\,|_{\mathcal{X}}\, \mathcal{C}}}$
+            \end{tabular}
+            \onslide<2>
+                \begin{tabular}{c}
+                {}\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, 
+                    z)):S_2\,|_{\mathcal{X}}\, \mathcal{C}}}} $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow S_2
+                \,|_{\mathcal{X}}\, \mathcal{C}}}$
+                \end{tabular}
+            \onslide<3>
+                \begin{tabular}{c}
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, 
+                    z)):S_3\,|_{\mathcal{X}}\, \mathcal{C}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow S_3\,|_{\mathcal{X}}\, \mathcal{C}}}} 
+                    $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                S_3\,|_{\mathcal{X}}\, \mathcal{C}}}$
+                \end{tabular}
+            \onslide<4>
+                \begin{tabular}{c}
+                    $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z 
+                    \vdash
+                    (x\, z)\, (y \, z):S_4\,|_{\mathcal{X}}\, 
+                    \mathcal{C}}}} $\\
+                    $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                        \lambda z:Z.  ((x\, z)\, (y \, 
+                        z)):Z\rightarrow S_4\,|_{\mathcal{X}}\, 
+                        \mathcal{C}}}} $\\
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                        \rightarrow Z \rightarrow 
+                        S_4\,|_{\mathcal{X}}\, \mathcal{C}}}} $\\
+                    $\displaystyle {{}
+                        \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                        ((x\, z)\, (y \, z)):X \rightarrow Y 
+                    \rightarrow Z\rightarrow S_4\,|_{\mathcal{X}}\, 
+                    \mathcal{C}}}$
+                \end{tabular}
+            \onslide<5>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:S_1\,|_{\mathcal{X}_1}\, 
+                            \mathcal{C}_1}}} $                        
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, 
+                z):A\,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup\{A\}}\, 
+                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1\triangleq S_2\rightarrow 
+                A\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup\{A\}}\, 
+                    \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1\triangleq S_2\rightarrow 
+                    A\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow A\,|_{\mathcal{X}_1
+                    \cup\mathcal{X}_2\cup\{A\}}\, 
+                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1\triangleq S_2\rightarrow 
+                A\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow 
+                A\,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup\{A\}}\, 
+                \mathcal{C}_{1}\cup\mathcal{C}_{2}\cup\{S_1\triangleq S_2\rightarrow 
+                A\}}} $
+                \end{tabular}
+            \onslide<6>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            \begin{tabular}{cc}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    x:X \vdash x :S_3\,|_{\mathcal{X}_3}\, 
+                                    \mathcal{C}_3}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z 
+                                    :S_4\,|_{\mathcal{X}_4}\, 
+                                    \mathcal{C}_4}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, 
+                            z:B\,|_{\mathcal{X}_3\cup\mathcal{X}_4
+                            \cup{\{B\}}}\, 
+                            \mathcal{C}_3\cup\mathcal{C}_4\cup\{S_3
+                            \triangleq  
+                            S_4 \rightarrow B\}}}} $
+                            \end{tabular}&
+                            %put in the following tabular the previous 
+                            %changes about nested tabular
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, 
+                z):A\,|_{\mathcal{X}_3\cup\mathcal{X}_4\cup\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, S_3 \triangleq  S_4 \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_3\cup\mathcal{X}_4\cup\mathcal{X}_2
+                        \cup\{A,B\}}\, 
+                    \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                    A, S_3 \triangleq  S_4 \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow 
+                    A\,|_{\mathcal{X}_3\cup\mathcal{X}_4
+                    \cup\mathcal{X}_2\cup\{A,B\}}\, 
+                \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, S_3 \triangleq  S_4 \rightarrow B\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow 
+                A\,|_{\mathcal{X}_3\cup\mathcal{X}_4\cup\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                \mathcal{C}_{3}\cup\mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, S_3 \triangleq  S_4 \rightarrow B\}}} $
+                \end{tabular}
+            \onslide<7>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            \begin{tabular}{cc}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{x:X \in 
+                                    \Gamma, x:X}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    x:X \vdash x :X\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z 
+                                    :S_4\,|_{\mathcal{X}_4}\, 
+                                    \mathcal{C}_4}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{\mathcal{X}_4
+                            \cup{\{B\}}}\, \mathcal{C}_4\cup\{X
+                            \triangleq  S_4 
+                            \rightarrow B\}}}} $
+                            \end{tabular}&
+                            %put in the following tabular the previous 
+                            %changes about nested tabular
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, 
+                z):A\,|_{\mathcal{X}_4\cup\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, X \triangleq  S_4 \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_4\cup\mathcal{X}_2
+                        \cup\{A,B\}}\, 
+                    \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                    A, X \triangleq  S_4 \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow A\,|_{\mathcal{X}_4
+                    \cup\mathcal{X}_2\cup\{A,B\}}\, 
+                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, X \triangleq  S_4 \rightarrow B\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\mathcal{X}_4\cup\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                \mathcal{C}_{4}\cup\mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow 
+                A, X \triangleq  S_4 \rightarrow B\}}} $
+                \end{tabular}
+            \onslide<8>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            \begin{tabular}{cc}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{x:X \in 
+                                    \Gamma, x:X}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    x:X \vdash x :X\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{z:Z \in 
+                                    \Gamma, z:Z}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
+                            B\}}}} $
+                            \end{tabular}&
+                            %put in the following tabular the previous 
+                            %changes about nested tabular
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, z):A\,|_{\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                \mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow A, X
+                \triangleq  Z 
+                \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_2
+                        \cup\{A,B\}}\, 
+                    \mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow A,
+                    X \triangleq  Z 
+                    \rightarrow B\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow 
+                    A\,|_{\mathcal{X}_2\cup\{A,B\}}\, 
+                    \mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow A,
+                    X \triangleq  Z 
+                    \rightarrow B\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\mathcal{X}_2
+                    \cup\{A,B\}}\, 
+                    \mathcal{C}_{2}\cup\{B\triangleq S_2\rightarrow A,
+                    X \triangleq  Z 
+                    \rightarrow B\}}} $
+                \end{tabular}
+            \onslide<9>
+                \begin{tabular}{c}
+                    \begin{tabular}{rl}
+                        \begin{tabular}{c}
+%                            \begin{tabular}{rl}
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{x:X \in 
+%                                    \Gamma, x:X}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    x:X \vdash x :X\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular} &
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{z:Z \in 
+%                                    \Gamma, z:Z}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular}
+%                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
+                            B\}}}} $
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            \begin{tabular}{rl}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    y:Y \vdash y 
+                                    :S_5\,|_{\mathcal{X}_5}\, 
+                                    \mathcal{C}_5}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z 
+                                    :S_6\,|_{\mathcal{X}_6}\, 
+                                    \mathcal{C}_6}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, 
+                            z:C\,|_{\mathcal{X}_5\cup\mathcal{X}_6\cup
+                            \{C\}}\, 
+                            \mathcal{C}_5\cup\mathcal{C}_6\cup\{
+                            S_5 \triangleq  S_6 \rightarrow C\}}}} $                      
+                    \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, 
+                z):A\,|_{\mathcal{X}_5\cup\mathcal{X}_6
+                    \cup\{A,B,C\}}\, 
+                \mathcal{C}_5\cup\mathcal{C}_6\cup\{B\triangleq C\rightarrow A, 
+                X \triangleq  Z \rightarrow B, S_5 \triangleq  S_6 \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_5\cup\mathcal{X}_6
+                        \cup\{A,B,C\}}\, 
+                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                    A, X \triangleq  Z \rightarrow B, S_5 \triangleq  S_6 \rightarrow 
+                    C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow 
+                    A\,|_{\mathcal{X}_5\cup\mathcal{X}_6\cup\{A,B,C\}}\, 
+                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                    A, X \triangleq  Z \rightarrow B, S_5 \triangleq  S_6 \rightarrow 
+                    C\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\mathcal{X}_5\cup\mathcal{X}_6
+                    \cup\{A,B,C\}}\, 
+                    \mathcal{C}_5\cup\mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                    A, X \triangleq  Z \rightarrow B, S_5 \triangleq  S_6 \rightarrow 
+                    C\}}} $
+                \end{tabular}
+            \onslide<10>
+                \begin{tabular}{c}
+                    \begin{tabular}{rl}
+                        \begin{tabular}{c}
+%                            \begin{tabular}{rl}
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{x:X \in 
+%                                    \Gamma, x:X}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    x:X \vdash x :X\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular} &
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{z:Z \in 
+%                                    \Gamma, z:Z}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular}
+%                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
+                            B\}}}} $
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            \begin{tabular}{rl}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{y:Y \in 
+                                    \Gamma, y:Y}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    y:Y \vdash y :Y\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z 
+                                    :S_6\,|_{\mathcal{X}_6}\, 
+                                    \mathcal{C}_6}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:C\,|_{\mathcal{X}_6\cup
+                            \{C\}}\, \mathcal{C}_6\cup\{
+                            Y \triangleq  S_6 \rightarrow C\}}}} $                      
+                    \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, z):A\,|_{\mathcal{X}_6
+                    \cup\{A,B,C\}}\, \mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                A, X \triangleq  Z \rightarrow B, Y \triangleq  S_6 \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\mathcal{X}_6
+                        \cup\{A,B,C\}}\, 
+                    \mathcal{C}_6\cup\{B\triangleq C\rightarrow A, X
+                    \triangleq  Z 
+                    \rightarrow B, Y \triangleq  S_6 \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow 
+                    A\,|_{\mathcal{X}_6\cup\{A,B,C\}}\, 
+                    \mathcal{C}_6\cup\{B\triangleq C\rightarrow A, X
+                    \triangleq  Z 
+                    \rightarrow B, Y \triangleq  S_6 \rightarrow C\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\mathcal{X}_6
+                    \cup\{A,B,C\}}\, \mathcal{C}_6\cup\{B\triangleq C\rightarrow 
+                    A, X \triangleq  Z \rightarrow B, Y \triangleq  S_6 \rightarrow C\}}} 
+                    $
+                \end{tabular}
+            \onslide<11>
+                \begin{tabular}{c}
+                    \begin{tabular}{rl}
+                        \begin{tabular}{c}
+%                            \begin{tabular}{rl}
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{x:X \in 
+%                                    \Gamma, x:X}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    x:X \vdash x :X\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular} &
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{z:Z \in 
+%                                    \Gamma, z:Z}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular}
+%                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
+                            B\}}}} $
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            \begin{tabular}{rl}
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{y:Y \in 
+                                    \Gamma, y:Y}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    y:Y \vdash y :Y\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular} &
+                                \begin{tabular}{c}
+                                    $\displaystyle {{{}\over{z:Z \in 
+                                    \Gamma, z:Z}}}$\\
+                                    $\displaystyle {{{}\over{\Gamma, 
+                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+                                    \emptyset}}} $
+                                \end{tabular}
+                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:C\,|_{
+                            \{C\}}\, \{
+                            Y \triangleq  Z \rightarrow C\}}}} $                      
+                    \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, z):A\,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow 
+                A, X \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow A, X
+                    \triangleq Z 
+                    \rightarrow B, Y \triangleq  Z \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow A\,|_{\{A,B,C\}}\, 
+                    \{B\triangleq C\rightarrow A, X \triangleq  Z
+                    \rightarrow B, Y \triangleq  Z 
+                    \rightarrow C\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow A, X 
+                \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}}} $
+                \end{tabular}
+            \onslide<12>
+                \begin{tabular}{c}
+                    \begin{tabular}{rl}
+                        \begin{tabular}{c}
+%                            \begin{tabular}{rl}
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{x:X \in 
+%                                    \Gamma, x:X}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    x:X \vdash x :X\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular} &
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{z:Z \in 
+%                                    \Gamma, z:Z}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular}
+%                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, x:X, z:Z 
+                            \vdash
+                            x\, z:B\,|_{{\{B\}}}\, \{X \triangleq  Z \rightarrow 
+                            B\}}}} $
+                            \end{tabular}&
+                        \begin{tabular}{c}
+%                            \begin{tabular}{rl}
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{y:Y \in 
+%                                    \Gamma, y:Y}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    y:Y \vdash y :Y\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular} &
+%                                \begin{tabular}{c}
+%                                    $\displaystyle {{{}\over{z:Z \in 
+%                                    \Gamma, z:Z}}}$\\
+%                                    $\displaystyle {{{}\over{\Gamma, 
+%                                    z:Z \vdash z :Z\,|_{\emptyset}\, 
+%                                    \emptyset}}} $
+%                                \end{tabular}
+%                            \end{tabular}\\
+                            $\displaystyle {{{}\over{\Gamma, y:Y, z:Z 
+                            \vdash
+                            y \, z:C\,|_{
+                            \{C\}}\, \{
+                            Y \triangleq  Z \rightarrow C\}}}} $                      
+                    \end{tabular}
+                    \end{tabular}\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y, z:Z \vdash
+                (x\, z)\, (y \, z):A\,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow 
+                A, X \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X, y:Y \vdash 
+                    \lambda z:Z.  ((x\, z)\, (y \, z)):Z \rightarrow A 
+                    \,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow A, X
+                    \triangleq Z 
+                    \rightarrow B, Y \triangleq  Z \rightarrow C\}}}} $\\
+                $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    y:Y.\lambda z:Z.  ((x\, z)\, (y \, z)):Y 
+                    \rightarrow Z\rightarrow A\,|_{\{A,B,C\}}\, 
+                    \{B\triangleq C\rightarrow A, X \triangleq  Z
+                    \rightarrow B, Y \triangleq  Z 
+                    \rightarrow C\}}}}  $\\
+                $\displaystyle {{}
+                    \over{\Gamma \vdash \lambda x:X. \lambda y:Y.\lambda z:Z.
+                    ((x\, z)\, (y \, z)):X \rightarrow Y \rightarrow 
+                Z\rightarrow A\,|_{\{A,B,C\}}\, \{B\triangleq C\rightarrow A, X 
+                \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}}} $
+                \end{tabular}
+                \begin{block}{Conclusion}
+                    We conclude that the term $\lambda x:X. \lambda y:Y.
+                    \lambda z:Z.  ((x\, z)\, (y \, z))$ has
+                    \emph{abstract type} $X
+                    \rightarrow Y \rightarrow Z\rightarrow A$ if it is
+                    possible to find a type substitution $\sigma$ such
+                    that $\sigma \Join \{B\triangleq C\rightarrow A, X 
+                    \triangleq  Z \rightarrow B, Y \triangleq  Z \rightarrow C\}$
+                \end{block}
+    \end{overprint}
+    \end{center}
+    \normalsize
+\end{frame}
+
+\begin{frame}{Extended example}
+    \footnotesize
+        \begin{overprint}
+            \onslide<1>
+            \begin{tabular}{c}
+                $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                (x\, x):S_1\,|_{\mathcal{X}}\, \mathcal{C}}}$
+            \end{tabular}
+            \onslide<2>
+                \begin{tabular}{c}
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        x\, x:S_2\,|_{\mathcal{X}}\, \mathcal{C}}}} $\\
+                    $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                    (x\, x):X\rightarrow S_2\,|_{\mathcal{X}}\, \mathcal{C}}}$
+                \end{tabular}
+            \onslide<3>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:S_1\,|_{\mathcal{X}_1}\, 
+                            \mathcal{C}_1}}} $                        
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        x\, x:A\,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup
+                        \{A\}}\, \mathcal{C}_1\cup\mathcal{C}_2\cup
+                        \{S_1 \triangleq S_2\rightarrow A\}}}} $\\
+                    $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                    (x\, x):X\rightarrow A\,|_{\mathcal{X}_1
+                    \cup\mathcal{X}_2\cup \{A\}}\, \mathcal{C}_1\cup
+                        \mathcal{C}_2\cup \{S_1 \triangleq S_2\rightarrow A\}}}$
+                \end{tabular}
+            \onslide<4>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{x:X\in \Gamma,
+                            x:X }}} $  \\
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:X\,|_{\emptyset}\, 
+                            \emptyset}}} $                        
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:S_2\,|_{\mathcal{X}_2}\, 
+                            \mathcal{C}_2}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        x\, x:A\,|_{\mathcal{X}_2\cup
+                        \{A\}}\, \mathcal{C}_2\cup
+                        \{X \triangleq S_2\rightarrow A\}}}} $\\
+                    $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                    (x\, x):X\rightarrow A\,|_{
+                        \mathcal{X}_2\cup \{A\}}\, 
+                        \mathcal{C}_2\cup \{X \triangleq S_2\rightarrow A\}}}$
+                \end{tabular}
+            \onslide<5>
+                \begin{tabular}{c}
+                    \begin{tabular}{cc}
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{x:X\in \Gamma,
+                            x:X }}} $  \\
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:X\,|_{\emptyset}\, 
+                            \emptyset}}} $                        
+                            \end{tabular}&
+                        \begin{tabular}{c}
+                            $\displaystyle {{{}\over{x:X\in \Gamma,
+                            x:X }}} $  \\
+                            $\displaystyle {{{}\over{\Gamma, x:X 
+                            \vdash
+                            x:X\,|_{\emptyset}\, 
+                            \emptyset}}} $                        
+                            \end{tabular}
+                    \end{tabular}\\
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                        x\, x:A\,|_{
+                        \{A\}}\, \{X \triangleq X\rightarrow A\}}}} $\\
+                    $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
+                    (x\, x):X\rightarrow A\,|_{
+                        \{A\}}\,  \{X \triangleq X\rightarrow A\}}}$
+                \end{tabular}
+                \begin{block}{Conclusion}
+                    We conclude that the term $\lambda x:X.(x \, x))$ has
+                    \emph{abstract type} $X\rightarrow A$ if it is
+                    possible to find a type substitution $\sigma$ such
+                    that $\sigma \Join \{X\triangleq X\rightarrow A\}$
+                \end{block}
+        \end{overprint}
+    \normalsize
+\end{frame}
+
+\subsection{Definition of solution for $(\Gamma, t, S, \mathcal{C})$}
+
+\begin{frame}
+    It is helpful make the following observations:
+    \begin{itemize}
+        \item when a type variable $X$ is choosen by a final rule which has
+            some premises, then $X$ is different from all other type variables
+            introduced by premises' subderivations
+        \item for any given pair $(\Gamma, t)$ the rules provide a procedure to 
+            build sets $\mathcal{X}, \mathcal{C}$ and find type $T_1$ such that
+            $\Gamma \vdash t : T_1 \; \textbar_\mathcal{X} \; \mathcal{C}$
+        \item if we consider the relation  
+            $\Gamma \vdash t : T_1 \; \textbar_\mathcal{X} \; \mathcal{C}$ modulo
+            the choice of fresh variables, then the constraint set $\mathcal{C}$ and
+            type $T_1$ are \emph{uniquely} determined
+        \item in order to find solutions for $(\Gamma, t)$ we use the given rules to:
+            \begin{enumerate}
+                \item build the constraint set $\mathcal{C}$, that
+                    must be satisfied in order for $t$ to have a type
+                \item determine a type $S$ possibly containing type variables (which are 
+                    subjects under constraints in $\mathcal{C}$), which caracterizes
+                    the types of $t$ in terms of these variables
+                \item find a type sustitution $\sigma$ such that $\sigma \Join 
+                    \mathcal{C}$: for each such $\sigma$ the type $\sigma S$ is
+                    a possible type for $t$, hence $(\sigma, \sigma S)$ 
+                    is a solution for $(\Gamma, t)$
+                \item if no type sustitution $\sigma \Join \mathcal{C}$ exists then
+                    there is no way to instantiate type variables in $t$ in order
+                    for $t$ to have a type.
+            \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables.
+    \begin{block}{Definition of \emph{solution} for $(\Gamma, t, S, \mathcal{C})$}
+        Let $\sigma$ be a type substitution and $T_{1} \in T$ and suppose
+            $\Gamma \vdash t : T_1 \; \textbar_\mathcal{X} \; \mathcal{C}$ \\
+        A  \emph{solution} for $(\Gamma, t, S, \mathcal{C})$ is a pair 
+        $(\sigma, T_{1})$ such that $\sigma \Join \mathcal{C} \wedge \sigma S = T_1$
+    \end{block}
+    
+    \begin{example}
+        Let $t = \lambda x:X\rightarrow Y. x \, 0$ then:
+        \begin{displaymath}
+            \begin{split}
+                S &= (X \rightarrow Y) \rightarrow Z \\
+                \mathcal{C} &= \{Nat \rightarrow Z \triangleq X \rightarrow Y\}\\
+                \sigma &= \{X \mapsto Nat, Z \mapsto Bool, Y \mapsto Bool\}\\
+            \end{split}
+        \end{displaymath}
+        hence $(\sigma, (Nat \rightarrow Bool) \rightarrow Bool)$ is a solution 
+        for $(\Gamma, t, S, \mathcal{C})$.
+    \end{example}
+\end{frame}
+
+\begin{frame}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables\\~\\
+    We have two different ways of instantiating type variables appearing in $t$
+    to produce a typeable term. In the next definitions $\sigma$ is a type
+    sustitution and $T_1 \in T$ as usual:
+    \begin{block}{Declarative approach}
+        $\Omega = \{ \omega = (\sigma, T_1): \omega\text{ is solution of } (\Gamma, t)\}$
+    \end{block}
+
+    \begin{block}{Algorithmic approach}
+        $\Theta = \{ \theta = (\sigma, T_1): \theta\text{ is solution of } 
+            (\Gamma, t, S, \mathcal{C})\}$
+    \end{block}
+    
+    
+
+    \begin{theorem}
+    $\Omega = \Theta$    
+    \end{theorem}
+\end{frame}
+
+
+\section{Unification}
+\subsection{Algorithm}
+\begin{frame}
+    \begin{block}{Unification algorithm}
+        By pattern matching on the structure of constraint set $\mathcal{C}$
+        given as argument:
+        \begin{displaymath}
+            \begin{split}
+                unify(\emptyset) &= [\,] \\
+                unify(\{T_1 \triangleq T_2\} \cup \mathcal{C}^{\prime}) &=
+                    unify(\mathcal{C}^{\prime})
+                    \quad \text{if } T_1 = T_2\\
+                unify(\{X \triangleq T_1\} \cup \mathcal{C}^{\prime}) &=
+                    unify([ X \mapsto T_1]\mathcal{C}^{\prime}) \circ [X \mapsto T_1]
+                    \quad \text{if } X \not \in FV(T_1)\\
+                unify(\{T_1 \triangleq X\} \cup \mathcal{C}^{\prime}) &=
+                    unify([ X \mapsto T_1]\mathcal{C}^{\prime}) \circ [X \mapsto T_1]
+                    \quad \text{if } X \not \in FV(T_1)\\
+                unify(\{T_1 \rightarrow T_2 \triangleq S_1\rightarrow S_2 \} 
+                    \cup \mathcal{C}^{\prime}) &=
+                    unify(\mathcal{C}^{\prime} \cup \{T_1 \triangleq S_1,
+                        T_2 \triangleq S_2\}) \\
+                unify(\_) &= \text{\color{red} raise failure}\\
+            \end{split}
+        \end{displaymath}
+    \end{block}
+    
+    For the properties' discussion are useful the following concepts:
+    \begin{itemize}
+        \item   A type substitution $\sigma$ is \emph{less specific} (or 
+                \emph{more general}) than a type substitution $\rho$, written
+                as $\sigma \sqsubseteq \rho$, if $\rho = \gamma \circ \sigma$,
+                for some type substitution $\gamma$
+        \item   A \emph{principal unifier} for a constraint set $\mathcal{C}$ 
+                is a type substitution $\sigma$ such that $\sigma \Join \mathcal{C}$
+                and $\forall \rho \Join \mathcal{C}: \sigma \sqsubseteq \rho$
+    \end{itemize}
+    \begin{example}
+        Let $\rho = \{S \mapsto Nat \rightarrow Nat, Z \mapsto Nat\}$ 
+        and $\sigma = \{S \mapsto Z \rightarrow Z\}$. We have $\sigma 
+        \sqsubseteq \rho$ because $\exists \gamma = \{Z \mapsto Nat\}$ 
+        such that $\rho = \gamma \circ \sigma$
+    \end{example}
+\end{frame}
+
+\begin{frame}
+    We return to the extended example: we built the constraint set
+    $\mathcal{C} = \{B\triangleq C\rightarrow A, X 
+                        \triangleq  Z \rightarrow B, Y \triangleq  Z
+                        \rightarrow C\}$, now we apply the unification
+                        in order to build a type substitution $\sigma$
+                        (hoping such that $\sigma \Join \mathcal{C}$)
+    \begin{overprint}
+        \onslide<1>
+    \begin{displaymath}
+             unify(\{B\triangleq C\rightarrow A,X 
+                                \triangleq  Z \rightarrow B, Y
+                                \triangleq  Z \rightarrow C\}) \\
+    \end{displaymath}
+        \onslide<2>
+    \begin{displaymath}
+             unify(\{B\triangleq C\rightarrow A\} \cup \{X 
+                                \triangleq  Z \rightarrow B, Y
+                                \triangleq  Z \rightarrow C\}) \\
+    \end{displaymath}
+        \onslide<3>
+    \begin{displaymath}
+             unify([B\mapsto C\rightarrow A]\{X \triangleq  Z \rightarrow B, Y
+                                \triangleq  Z \rightarrow
+                                C\})\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<4>
+    \begin{displaymath}
+             unify(\{ X \triangleq  Z \rightarrow C\rightarrow A, Y
+                                \triangleq  Z \rightarrow
+                                C\})\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<5>
+    \begin{displaymath}
+             unify(\{ X \triangleq  Z \rightarrow C\rightarrow
+                A\}\cup\{ Y \triangleq  Z \rightarrow
+                                C\})\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<6>
+    \begin{displaymath}
+             unify([ X \triangleq  Z \rightarrow C\rightarrow
+                A]\{ Y \triangleq  Z \rightarrow
+                    C\})\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                A]\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<7>
+    \begin{displaymath}
+             unify(\{ Y \triangleq  Z \rightarrow
+                    C\})\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                A]\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<8>
+    \begin{displaymath}
+             unify(\emptyset)\circ[ Y \triangleq  Z \rightarrow
+                    C]\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                A]\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+        \onslide<9>
+    \begin{displaymath}
+             []\circ[ Y \triangleq  Z \rightarrow
+                    C]\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                A]\circ[B\mapsto C\rightarrow A]\\
+    \end{displaymath}
+    \end{overprint}
+\end{frame}
+
+\subsection{Properties}
+
+\begin{frame}
+    \begin{theorem}
+        $unify(\mathcal{C})$ halts, either by failing or by returning a type 
+        substitution $\sigma$
+    \end{theorem}
+    \begin{theorem}
+        $unify(\mathcal{C}) = \sigma \rightarrow \sigma \Join \mathcal{C}$
+    \end{theorem}
+    \begin{theorem}
+        $\rho \Join \mathcal{C} \rightarrow unify(\mathcal{C}) = \sigma \wedge 
+            \sigma \sqsubseteq \rho$
+    \end{theorem}
+\end{frame}
+
+\subsection{Definition of principal solution for $(\Gamma, t,S, \mathcal{C})$}
+
+\begin{frame}
+    Let $\Gamma$ be a context and $t$ be a term containing free variables.
+    \begin{block}{Definition of \emph{principal solution} for 
+            $(\Gamma, t, S, \mathcal{C})$}
+        A  \emph{principal solution} for $(\Gamma, t, S, \mathcal{C})$ 
+        is a solution $(\sigma, T_{1})$ such that for any other solution
+        $(\rho, T_2)$ for $(\Gamma, t, S, \mathcal{C})$ we have $\sigma 
+        \sqsubseteq \rho$.
+    \end{block}
+    
+    \begin{theorem}
+        if $(\Gamma, t, S, \mathcal{C})$ has a solution, then it has a 
+        principal one too. The unification algorithm can be used to
+        decide if $(\Gamma, t, S, \mathcal{C})$ has solutions and if it 
+        is the case, it compute the principal one.
+    \end{theorem}
+\end{frame}
+
+\begin{frame}
+    We finish our extended example to show a principal solution. Using
+    unification algorithm we found the type substitution:
+    \begin{displaymath}
+         \sigma = []\circ[ Y \triangleq  Z \rightarrow
+                C]\circ[ X \triangleq  Z \rightarrow C\rightarrow
+            A]\circ[B\mapsto C\rightarrow A]
+    \end{displaymath}
+    And, using the deduction for constraint typing relation, we found
+    that:
+    \begin{displaymath}
+        \lambda x:X. \lambda y:Y.
+            \lambda z:Z.  ((x\, z)\, (y \, z)):X \rightarrow
+                Y \rightarrow Z\rightarrow A
+    \end{displaymath}
+    In order to find a principal solution we apply $\sigma$ to the
+    abstract type above to have a \emph{concrete} type for the term
+    (possibly containing free variables, heart of parametric polymorphism,
+    remember?):
+    \begin{overprint}
+        \onslide<1>
+        \begin{displaymath}
+            \sigma (X \rightarrow Y \rightarrow Z\rightarrow A)
+        \end{displaymath}
+        \onslide<2>
+        \begin{displaymath}
+            \sigma X \rightarrow \sigma(Y \rightarrow Z\rightarrow A)
+        \end{displaymath}
+        \onslide<3>
+        \begin{displaymath}
+            \sigma X \rightarrow \sigma Y \rightarrow \sigma (Z\rightarrow A)
+        \end{displaymath}
+        \onslide<4>
+        \begin{displaymath}
+            \sigma X \rightarrow \sigma Y \rightarrow \sigma
+            Z\rightarrow \sigma A
+        \end{displaymath}
+        \onslide<5>
+        \begin{displaymath}
+            (Z\rightarrow C\rightarrow A) \rightarrow \sigma Y 
+            \rightarrow \sigma Z\rightarrow \sigma A
+        \end{displaymath}
+        \onslide<6>
+        \begin{displaymath}
+            (Z\rightarrow C\rightarrow A) \rightarrow (Z\rightarrow C) 
+            \rightarrow \sigma Z\rightarrow \sigma A
+        \end{displaymath}
+        \onslide<7>
+        \begin{displaymath}
+            (Z\rightarrow C\rightarrow A) \rightarrow (Z\rightarrow C) 
+            \rightarrow Z\rightarrow \sigma A
+        \end{displaymath}
+        \onslide<8>
+        \begin{displaymath}
+            (Z\rightarrow C\rightarrow A) \rightarrow (Z\rightarrow C) 
+            \rightarrow Z\rightarrow  A
+        \end{displaymath}
+        Hence $(\sigma,             (Z\rightarrow C\rightarrow A)
+        \rightarrow (Z\rightarrow C) \rightarrow Z\rightarrow  A),
+        \forall A,C,Z\in T,$ is the principal solution for 
+        \begin{displaymath}    
+                (\emptyset, \lambda x:X. \lambda y:Y.
+            \lambda z:Z.  ((x\, z)\, (y \, z)), X \rightarrow
+                Y \rightarrow Z\rightarrow A, \{B\triangleq
+                C\rightarrow A, X 
+                                        \triangleq  Z \rightarrow B, Y
+                                        \triangleq  Z
+                                                                \rightarrow
+                                                                C\})
+        \end{displaymath}
+    \end{overprint}
+\end{frame}
+
+
+\end{document}
+
