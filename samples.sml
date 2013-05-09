@@ -87,4 +87,7 @@ structure MySampleStructure =
             end*)
         val term_from_extended_example =
             fn x => fn y => fn z => ((x z) (y z))
+
+        (* the following is the term which is used during lecture:
+            lambda x:X.(lambda y:Y.(lambda z:Z. ((x z) (y z)))) *)
     end
