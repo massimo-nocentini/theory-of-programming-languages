@@ -304,9 +304,9 @@
     \begin{block}{Definition of substitution}
         A \emph{type substitution} $\sigma$ is a mapping $\sigma: \mathcal{A}
         \rightarrow T$ \\~\\
-        A \emph{substitution application} $\sigma T_{1}$ 
-        of a type substitution $\sigma$ to a type $T_{1}$ is defined 
-        inductively on the structure of types:
+        A \emph{substitution application} $\sigma S_{1}$ 
+        of a type substitution $\sigma$ to a type $S_{1}$ is defined 
+        inductively on the structure of $S_1$:
         \begin{displaymath}
             \begin{split}
                 X \in \mathcal{A} \wedge \exists T_1: (X \mapsto T_{1}) 
@@ -1167,7 +1167,7 @@
             \end{tabular}
             \onslide<2>
                 \begin{tabular}{c}
-                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash 
                         x\, x:S_2\,|_{\mathcal{X}}\, \mathcal{C}}}} $\\
                     $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
                     (x\, x):X\rightarrow S_2\,|_{\mathcal{X}}\, \mathcal{C}}}$
@@ -1188,7 +1188,7 @@
                             \mathcal{C}_2}}} $                        
                             \end{tabular}
                     \end{tabular}\\
-                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash
                         x\, x:A\,|_{\mathcal{X}_1\cup\mathcal{X}_2\cup
                         \{A\}}\, \mathcal{C}_1\cup\mathcal{C}_2\cup
                         \{S_1 \triangleq S_2\rightarrow A\}}}} $\\
@@ -1215,7 +1215,7 @@
                             \mathcal{C}_2}}} $                        
                             \end{tabular}
                     \end{tabular}\\
-                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash
                         x\, x:A\,|_{\mathcal{X}_2\cup
                         \{A\}}\, \mathcal{C}_2\cup
                         \{X \triangleq S_2\rightarrow A\}}}} $\\
@@ -1244,7 +1244,7 @@
                             \emptyset}}} $                        
                             \end{tabular}
                     \end{tabular}\\
-                    $\displaystyle {{{}\over{\Gamma, x:X \vdash \lambda 
+                    $\displaystyle {{{}\over{\Gamma, x:X \vdash
                         x\, x:A\,|_{
                         \{A\}}\, \{X \triangleq X\rightarrow A\}}}} $\\
                     $\displaystyle {{}\over{\Gamma \vdash \lambda x:X.  
