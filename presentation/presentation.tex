@@ -287,7 +287,8 @@
             \begin{split}
                 \Gamma &\vdash \lambda x:X.x : X \rightarrow X\\
                 \Gamma &\vdash \lambda x:A.x : A \rightarrow A\\
-                \Gamma &\vdash \lambda s:S. \lambda z: Z. (s\, (s\, z)) : 
+                \Gamma &\vdash \lambda s:Z \rightarrow Z. \lambda z: Z.
+                    (s\, (s\, z)) : 
                     (Z \rightarrow Z) \rightarrow Z \rightarrow Z\\
             \end{split}
         \end{displaymath}
@@ -1665,27 +1666,27 @@
     \end{displaymath}
         \onslide<6>
     \begin{displaymath}
-             unify([ X \triangleq  Z \rightarrow C\rightarrow
+             unify([ X \mapsto  Z \rightarrow C\rightarrow
                 A]\{ Y \triangleq  Z \rightarrow
-                    C\})\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                    C\})\circ[ X \mapsto  Z \rightarrow C\rightarrow
                 A]\circ[B\mapsto C\rightarrow A]\\
     \end{displaymath}
         \onslide<7>
     \begin{displaymath}
              unify(\{ Y \triangleq  Z \rightarrow
-                    C\})\circ[ X \triangleq  Z \rightarrow C\rightarrow
+                    C\})\circ[ X \mapsto  Z \rightarrow C\rightarrow
                 A]\circ[B\mapsto C\rightarrow A]\\
     \end{displaymath}
         \onslide<8>
     \begin{displaymath}
-             unify(\emptyset)\circ[ Y \triangleq  Z \rightarrow
-                    C]\circ[ X \triangleq  Z \rightarrow C\rightarrow
+             unify(\emptyset)\circ[ Y \mapsto  Z \rightarrow
+                    C]\circ[ X \mapsto  Z \rightarrow C\rightarrow
                 A]\circ[B\mapsto C\rightarrow A]\\
     \end{displaymath}
         \onslide<9>
     \begin{displaymath}
-             []\circ[ Y \triangleq  Z \rightarrow
-                    C]\circ[ X \triangleq  Z \rightarrow C\rightarrow
+             []\circ[ Y \mapsto  Z \rightarrow
+                    C]\circ[ X \mapsto  Z \rightarrow C\rightarrow
                 A]\circ[B\mapsto C\rightarrow A]\\
     \end{displaymath}
     \end{overprint}
@@ -1922,8 +1923,8 @@
     We finish our extended example to show a principal solution. Using
     unification algorithm we found the type substitution:
     \begin{displaymath}
-         \sigma = []\circ[ Y \triangleq  Z \rightarrow
-                C]\circ[ X \triangleq  Z \rightarrow C\rightarrow
+         \sigma = []\circ[ Y \mapsto  Z \rightarrow
+                C]\circ[ X \mapsto  Z \rightarrow C\rightarrow
             A]\circ[B\mapsto C\rightarrow A]
     \end{displaymath}
     And, using the deduction for constraint typing relation, we found
