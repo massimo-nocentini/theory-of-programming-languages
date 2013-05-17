@@ -1,0 +1,53 @@
+THEORY OF PROGRAMMING LANGUAGES
+
+* Introduction
+  This repository contains my work for the exam about Theory of
+  Programming Languages at University of Florence. It is composed by
+  three main pieces: the implementation of a simple interpreter, a
+  detailed presentation and a small presentation (used in a class lecture).
+
+** Interpreter
+   We've implemented a simple interpreter for the typed lambda
+   calculus (the paradigm here is ``Everything is a function''). This
+   interpreter use a LL(k) parser in order to recognize user terms, it
+   evaluates the term to a value and infer its type.
+
+*** Standard ML
+    We've implemented the interpreter completely using SML, using the
+    environment of SML of New Jersey. The Compilation Manager has been
+    superb to assist the integration of the lexer and the parser,
+    using the tools ULex and ANTLR.
+
+*** Benjamin Pierce Implementation
+    We've no credits for the implemented logic: our work is based
+    entirely on the implementation suppied by Pierce, which is
+    available online at
+    http://www.cis.upenn.edu/~bcpierce/tapl/checkers/recon/. We've
+    only ported its OCaml compliant code into structured Standard ML.
+
+*** Compilation
+    After cloning the repository it is possible to compile the
+    interpreter in two ways:
+    1. $ make
+       will compile the sources and drop you into the SML-NJ repl with
+       the supplied bindings and structures loaded and ready for
+       interaction. In order to start interacting with our interpreter
+       it is sufficient to type:
+       > MySampleStructure.start_repl();
+    2. $ make compile
+       will compile the sources and gets you back in your bash shell.
+
+** Detailed presentation
+   This presentation contains many details, both theoretical both
+   practical:
+   1. the theoretical details concerns the proof of theorems and
+      properties: I've tried to rework the proofs in order to fit them
+      in beamer frames and write them down in the way my brain
+      understand them;
+   2. the practical details concerns the particular necessary to
+      implement the typed lambda calculus in Standard ML, covering
+      topics like ``term shifting'' and managing free variables in
+      term substitution.
+** Small presentation
+   This presentation is a subset of the previous one and has been used
+   in a class lecture given by myself.
